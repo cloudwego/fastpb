@@ -1,0 +1,70 @@
+syntax = "proto3";
+
+package nested.echo;
+
+option go_package = "github.com/cloudwego/fastpb/examples/fastpb_gen/nested";
+
+enum MsgEnum {
+    ENUM0 = 0;
+    ENUM1 = 1;
+    ENUM2 = 2;
+  }
+  
+  message Message {
+    int32 field3 = 3;   // int32 = varint; int32
+    int64 field4 = 4;   // int64 = varint; int64
+    uint32 field5 = 5;  // uint32 = varint; uint32
+    uint64 field6 = 6;  // uint64 = varint; uint64
+    sint32 field7 = 7;  // sint32 = zigzag32; int32
+    sint64 field8 = 8;  // sint64 = zigzag64; int64
+    bool field13 = 13;  // bool = varint; bool
+  
+    float field2 = 2;       // float = fixed32; float32
+    double field1 = 1;      // double = fixed64; float64
+    fixed32 field9 = 9;     // fixed32 = fixed32; uint32
+    fixed64 field10 = 10;   // fixed64 = fixed64; uint64
+    sfixed32 field11 = 11;  // sfixed32 = fixed32; int32
+    sfixed64 field12 = 12;  // sfixed64 = fixed64; int64
+  
+    string field14 = 14;    // string = bytes; string
+    bytes field15 = 15; // []byte = bytes; []byte
+    Message field16 = 16;   // *struct = bytes; *struct
+  
+    repeated string field20 = 20;   // []list = bytes; []list
+    repeated Message field21 = 21;  // []list = bytes; []list
+    map<int32, string> field22 = 22;    // map[] = bytes; map[]
+    map<string, Message> field23 = 23;  // map[] = bytes; map[]
+  
+    enum Enum {
+      ENUM0 = 0;
+      ENUM1 = 1;
+      ENUM2 = 2;
+    }
+    Enum field33 = 33; // int32
+    repeated Enum field34 = 34;   // []list = bytes; []list
+    map<int32, Enum> field35 = 35;  // map[] = bytes; map[]
+  
+    MsgEnum field36 = 36; // int32
+    repeated MsgEnum field37 = 37;   // []list = bytes; []list
+    map<int32, MsgEnum> field38 = 38;  // map[] = bytes; map[]
+  
+    oneof field40 {
+      int64 field41 = 41;
+      bool field42 = 42;
+      Message field43 = 43;
+    }
+  
+  
+    message Condition {
+      oneof field1 {
+        int64 field2 = 2;
+        ConditionTree field3 = 3;
+      }
+      bool field4 = 4;
+    }
+  
+    message ConditionTree {
+      repeated Condition field2 = 2;
+    }
+    Condition field50 = 50;
+  }

@@ -1,20 +1,28 @@
 # FastPB
 
-* **Attention**
-    - only support proto3 now
-    - any is not supported now.
+A faster Protobuf serializer & deserializer.
 
-# Install
+**Attention**
+
+* Only proto3 is supported now
+* Any is not supported now.
+
+## Install
+
 go >= 1.16
+
 ```shell
-go install github.com/cloudwego/fastpb/protoc-gen-fastpb
-```
-go <= 1.15
-```shell
-go get github.com/cloudwego/fastpb/protoc-gen-fastpb
+go install github.com/cloudwego/fastpb/protoc-gen-fastpb@latest
 ```
 
-# gen code
+go <= 1.15
+
+```shell
+go get github.com/cloudwego/fastpb/protoc-gen-fastpb@latest
+```
+
+## Generate Code
+
 ```shell
 protoc --go_out=. --fastpb_out=. ${your_idl}.proto
 ```

@@ -196,7 +196,7 @@ func (x *Base) fastWriteField4(buf []byte) (offset int) {
 }
 
 func (x *Base) fastWriteField6(buf []byte) (offset int) {
-	if len(x.Extra) == 0 {
+	if x.Extra == nil {
 		return offset
 	}
 	for k, v := range x.Extra {
@@ -238,7 +238,7 @@ func (x *BaseResp) fastWriteField2(buf []byte) (offset int) {
 }
 
 func (x *BaseResp) fastWriteField3(buf []byte) (offset int) {
-	if len(x.Extra) == 0 {
+	if x.Extra == nil {
 		return offset
 	}
 	for k, v := range x.Extra {
@@ -298,7 +298,7 @@ func (x *Base) sizeField4() (n int) {
 }
 
 func (x *Base) sizeField6() (n int) {
-	if len(x.Extra) == 0 {
+	if x.Extra == nil {
 		return n
 	}
 	for k, v := range x.Extra {
@@ -340,7 +340,7 @@ func (x *BaseResp) sizeField2() (n int) {
 }
 
 func (x *BaseResp) sizeField3() (n int) {
-	if len(x.Extra) == 0 {
+	if x.Extra == nil {
 		return n
 	}
 	for k, v := range x.Extra {

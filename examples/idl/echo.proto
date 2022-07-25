@@ -3,7 +3,7 @@ package echo;
 option go_package = "github.com/cloudwego/fastpb/examples/fastpb_gen";
 
 import "base.proto";
-import "google/protobuf/any.proto";
+import "nested.proto";
 
 //--------------------request & response--------------
 
@@ -39,9 +39,13 @@ message Message {
   map<string, Message> field23 = 23;  // map[] = bytes; map[]
   map<string, base.Base> field24 = 24;  // map[] = bytes; map[]
 
-  base.Enum field30 = 30; // int32
-  repeated base.Enum field31 = 31;   // []list = bytes; []list
-  map<int32, base.Enum> field32 = 32;  // map[] = bytes; map[]
+  base.Enum field27 = 27; // int32
+  repeated base.Enum field28 = 28;   // []list = bytes; []list
+  map<int32, base.Enum> field29 = 29;  // map[] = bytes; map[]
+
+  nested.echo.MsgEnum field30 = 30; // int32
+  repeated nested.echo.MsgEnum field31 = 31;   // []list = bytes; []list
+  map<int32, nested.echo.MsgEnum> field32 = 32;  // map[] = bytes; map[]
 
   enum Enum {
     ENUM0 = 0;
@@ -79,8 +83,15 @@ message Message {
   }
   Condition field50 = 50;
 
-    google.protobuf.Any field60 = 60; // []byte
-    repeated google.protobuf.Any field61 = 61; // []byte
+  optional int32 field51 = 51;   // int32 = varint; int32
+  optional int64 field52 = 52;   // int64 = varint; int64
+  optional uint32 field53 = 53;  // uint32 = varint; uint32
+  optional uint64 field54 = 54;  // uint64 = varint; uint64
+  optional sint32 field55 = 55;  // sint32 = zigzag32; int32
+  optional sint64 field56 = 56;  // sint64 = zigzag64; int64
+  optional bool field57 = 57;  // bool = varint; bool
+  optional string field58 = 58;   // []list = bytes; []list
+  optional Message field59 = 59;  // []list = bytes; []list
 }
 
 message Request {
