@@ -10,5 +10,5 @@ cd -
 
 rm -rf ./fastpb_gen && mkdir ./fastpb_gen
 protoc --go_opt=paths=source_relative --go_out=./fastpb_gen -I ./idl/ ./idl/*.proto
-protoc --go_opt=paths=source_relative --go_out=./fastpb_gen --fastpb_out=./fastpb_gen -I ./idl/ ./idl/*.proto
+protoc --go_opt=paths=source_relative --go_out=./fastpb_gen --fastpb_opt=paths=source_relative --fastpb_out=./fastpb_gen -I ./idl/ ./idl/*.proto
 #protoc --go_opt=paths=source_relative --go_out=./fastpb_gen -I ./idl/ ./idl/*.proto

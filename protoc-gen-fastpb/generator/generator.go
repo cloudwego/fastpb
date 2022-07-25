@@ -16,7 +16,6 @@ package generator
 
 import (
 	"fmt"
-	"path"
 	"sort"
 	"strings"
 	_ "unsafe"
@@ -29,7 +28,7 @@ import (
 )
 
 func GenerateFile(gen *protogen.Plugin, file *protogen.File) *protogen.GeneratedFile {
-	filename := path.Base(file.GeneratedFilenamePrefix + ".pb.fast.go")
+	filename := file.GeneratedFilenamePrefix + ".pb.fast.go"
 	g := gen.NewGeneratedFile(filename, file.GoImportPath)
 
 	// package
