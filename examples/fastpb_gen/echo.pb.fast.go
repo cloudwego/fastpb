@@ -369,17 +369,17 @@ func (x *Message) fastReadField23(buf []byte, _type int8) (offset int, err error
 
 func (x *Message) fastReadField24(buf []byte, _type int8) (offset int, err error) {
 	if x.Field24 == nil {
-		x.Field24 = make(map[string]*base.Base)
+		x.Field24 = make(map[string]*Base)
 	}
 	var key string
-	var value *base.Base
+	var value *Base
 	offset, err = fastpb.ReadMapEntry(buf[offset:], _type,
 		func(buf []byte, _type int8) (offset int, err error) {
 			key, offset, err = fastpb.ReadString(buf[offset:], _type)
 			return offset, err
 		},
 		func(buf []byte, _type int8) (offset int, err error) {
-			var v base.Base
+			var v Base
 			offset, err = fastpb.ReadMessage(buf[offset:], _type, &v)
 			if err != nil {
 				return offset, err
@@ -400,7 +400,7 @@ func (x *Message) fastReadField30(buf []byte, _type int8) (offset int, err error
 	if err != nil {
 		return offset, err
 	}
-	x.Field30 = base.Enum(v)
+	x.Field30 = Enum(v)
 	return offset, nil
 }
 
@@ -412,7 +412,7 @@ func (x *Message) fastReadField31(buf []byte, _type int8) (offset int, err error
 			if err != nil {
 				return offset, err
 			}
-			x.Field31 = append(x.Field31, base.Enum(v))
+			x.Field31 = append(x.Field31, Enum(v))
 			return offset, nil
 		})
 	return offset, err
@@ -420,10 +420,10 @@ func (x *Message) fastReadField31(buf []byte, _type int8) (offset int, err error
 
 func (x *Message) fastReadField32(buf []byte, _type int8) (offset int, err error) {
 	if x.Field32 == nil {
-		x.Field32 = make(map[int32]base.Enum)
+		x.Field32 = make(map[int32]Enum)
 	}
 	var key int32
-	var value base.Enum
+	var value Enum
 	offset, err = fastpb.ReadMapEntry(buf[offset:], _type,
 		func(buf []byte, _type int8) (offset int, err error) {
 			key, offset, err = fastpb.ReadInt32(buf[offset:], _type)
@@ -435,7 +435,7 @@ func (x *Message) fastReadField32(buf []byte, _type int8) (offset int, err error
 			if err != nil {
 				return offset, err
 			}
-			value = base.Enum(v)
+			value = Enum(v)
 			return offset, nil
 		})
 	if err != nil {
@@ -581,14 +581,14 @@ func (x *Message) fastReadField44(buf []byte, _type int8) (offset int, err error
 	if err != nil {
 		return offset, err
 	}
-	ov.Field44 = base.Enum(v)
+	ov.Field44 = Enum(v)
 	return offset, nil
 }
 
 func (x *Message) fastReadField45(buf []byte, _type int8) (offset int, err error) {
 	var ov Message_Field45
 	x.Field40 = &ov
-	var v base.Base
+	var v Base
 	offset, err = fastpb.ReadMessage(buf[offset:], _type, &v)
 	if err != nil {
 		return offset, err
@@ -678,7 +678,7 @@ func (x *Request) fastReadField2(buf []byte, _type int8) (offset int, err error)
 }
 
 func (x *Request) fastReadField255(buf []byte, _type int8) (offset int, err error) {
-	var v base.Base
+	var v Base
 	offset, err = fastpb.ReadMessage(buf[offset:], _type, &v)
 	if err != nil {
 		return offset, err
@@ -728,7 +728,7 @@ func (x *Response) fastReadField2(buf []byte, _type int8) (offset int, err error
 }
 
 func (x *Response) fastReadField255(buf []byte, _type int8) (offset int, err error) {
-	var v base.BaseResp
+	var v BaseResp
 	offset, err = fastpb.ReadMessage(buf[offset:], _type, &v)
 	if err != nil {
 		return offset, err
@@ -818,10 +818,10 @@ ReadFieldError:
 
 func (x *Message_ConditionTree) fastReadField1(buf []byte, _type int8) (offset int, err error) {
 	if x.Field1 == nil {
-		x.Field1 = make(map[int32]base.Enum)
+		x.Field1 = make(map[int32]Enum)
 	}
 	var key int32
-	var value base.Enum
+	var value Enum
 	offset, err = fastpb.ReadMapEntry(buf[offset:], _type,
 		func(buf []byte, _type int8) (offset int, err error) {
 			key, offset, err = fastpb.ReadInt32(buf[offset:], _type)
@@ -833,7 +833,7 @@ func (x *Message_ConditionTree) fastReadField1(buf []byte, _type int8) (offset i
 			if err != nil {
 				return offset, err
 			}
-			value = base.Enum(v)
+			value = Enum(v)
 			return offset, nil
 		})
 	if err != nil {

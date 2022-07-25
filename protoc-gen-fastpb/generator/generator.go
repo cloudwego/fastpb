@@ -23,6 +23,7 @@ import (
 
 	"google.golang.org/protobuf/compiler/protogen"
 	"google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/types/descriptorpb"
 
 	"github.com/cloudwego/fastpb"
 )
@@ -150,12 +151,14 @@ func (fg *fastgen) newFieldBody(f *protogen.Field, desc protoreflect.FieldDescri
 		// *struct
 		b := &bodyMessage{}
 		// FIXME: Any is unsupported.
-		b.TypeName = "*" + parseTypeName(string(desc.Message().FullName()), string(desc.Message().ParentFile().Package()), string(fg.f.Desc.Package()))
+		pfo := desc.Message().ParentFile().Options().(*descriptorpb.FileOptions)
+		b.TypeName = "*" + parseTypeName(string(desc.Message().FullName()), string(*pfo.GoPackage), string(*fg.f.Proto.Options.GoPackage))
 		return b
 	case protoreflect.EnumKind:
 		// Enum
 		b := &bodyEnum{}
-		b.TypeName = parseTypeName(string(desc.Enum().FullName()), string(desc.Enum().ParentFile().Package()), string(fg.f.Desc.Package()))
+		pfo := desc.Enum().ParentFile().Options().(*descriptorpb.FileOptions)
+		b.TypeName = parseTypeName(string(desc.Enum().FullName()), string(*pfo.GoPackage), string(*fg.f.Proto.Options.GoPackage))
 		return b
 	default:
 		b := &bodyBase{}
@@ -583,6 +586,7 @@ func (s sortFields) Swap(i, j int) {
 func parseTypeName(fullname, parentPkg, pkg string) string {
 	idx := strings.Index(fullname, ".") + 1
 	name := strings.ReplaceAll(fullname[idx:], ".", "_")
+	// if generated files are in the same package, drop the package name
 	if parentPkg != pkg {
 		name = fullname[:idx] + name
 	}
