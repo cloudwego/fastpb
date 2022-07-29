@@ -3,6 +3,7 @@ package echo;
 option go_package = "github.com/cloudwego/fastpb/examples/fastpb_gen";
 
 import "base.proto";
+import "nested.proto";
 import "google/protobuf/any.proto";
 
 //--------------------request & response--------------
@@ -39,9 +40,13 @@ message Message {
   map<string, Message> field23 = 23;  // map[] = bytes; map[]
   map<string, base.Base> field24 = 24;  // map[] = bytes; map[]
 
-  base.Enum field30 = 30; // int32
-  repeated base.Enum field31 = 31;   // []list = bytes; []list
-  map<int32, base.Enum> field32 = 32;  // map[] = bytes; map[]
+  base.Enum field27 = 27; // int32
+  repeated base.Enum field28 = 28;   // []list = bytes; []list
+  map<int32, base.Enum> field29 = 29;  // map[] = bytes; map[]
+
+  nested.echo.MsgEnum field30 = 30; // int32
+  repeated nested.echo.MsgEnum field31 = 31;   // []list = bytes; []list
+  map<int32, nested.echo.MsgEnum> field32 = 32;  // map[] = bytes; map[]
 
   enum Enum {
     ENUM0 = 0;

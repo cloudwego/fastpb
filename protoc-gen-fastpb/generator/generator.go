@@ -16,6 +16,7 @@ package generator
 
 import (
 	"fmt"
+	"path/filepath"
 	"sort"
 	"strings"
 	_ "unsafe"
@@ -150,14 +151,12 @@ func (fg *fastgen) newFieldBody(f *protogen.Field, desc protoreflect.FieldDescri
 		// *struct
 		b := &bodyMessage{}
 		// FIXME: Any is unsupported.
-		pfo := desc.Message().ParentFile().Options().(*descriptorpb.FileOptions)
-		b.TypeName = "*" + parseTypeName(string(desc.Message().FullName()), string(*pfo.GoPackage), string(*fg.f.Proto.Options.GoPackage))
+		b.TypeName = "*" + parseTypeName(desc.Message(), fg.f.Proto)
 		return b
 	case protoreflect.EnumKind:
 		// Enum
 		b := &bodyEnum{}
-		pfo := desc.Enum().ParentFile().Options().(*descriptorpb.FileOptions)
-		b.TypeName = parseTypeName(string(desc.Enum().FullName()), string(*pfo.GoPackage), string(*fg.f.Proto.Options.GoPackage))
+		b.TypeName = parseTypeName(desc.Enum(), fg.f.Proto)
 		return b
 	default:
 		b := &bodyBase{}
@@ -582,12 +581,22 @@ func (s sortFields) Swap(i, j int) {
 	s[j] = tmp
 }
 
-func parseTypeName(fullname, parentPkg, pkg string) string {
-	idx := strings.Index(fullname, ".") + 1
-	name := strings.ReplaceAll(fullname[idx:], ".", "_")
-	// if generated files are in the same package, drop the package name
-	if parentPkg != pkg {
-		name = fullname[:idx] + name
+func parseTypeName(desc protoreflect.Descriptor, fdesc *descriptorpb.FileDescriptorProto) string {
+	switch desc.Parent().(type) {
+	case protoreflect.MessageDescriptor:
+		fullname := string(desc.FullName())
+		name := strings.TrimPrefix(fullname, string(desc.ParentFile().Package())+".")
+		name = strings.ReplaceAll(name, ".", "_")
+		return name
+	default:
+		// protoreflect.FileDescriptor usually
+		name := strings.ReplaceAll(string(desc.Name()), ".", "_")
+		pfo := desc.ParentFile().Options().(*descriptorpb.FileOptions)
+		parentGoPkg := *pfo.GoPackage
+		goPkg := string(*fdesc.Options.GoPackage)
+		if parentGoPkg != goPkg {
+			name = filepath.Base(parentGoPkg) + "." + name
+		}
+		return name
 	}
-	return name
 }
