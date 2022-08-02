@@ -127,6 +127,7 @@ func (fg *fastgen) NewField(f *protogen.Field) FastAPIGenerator {
 }
 
 func (fg *fastgen) newFieldBody(f *protogen.Field, desc protoreflect.FieldDescriptor, isList bool) fastAPIBodyGenerator {
+	isPointer := isPointer(f)
 	// map
 	if desc.IsMap() {
 		// map
@@ -162,6 +163,7 @@ func (fg *fastgen) newFieldBody(f *protogen.Field, desc protoreflect.FieldDescri
 		b := &bodyBase{}
 		b.TypeName = kindGoType[kind]
 		b.APIType = kindAPIType[kind]
+		b.IsPointer = isPointer
 		return b
 	}
 }
@@ -242,6 +244,7 @@ type fgField struct {
 	number    string // field number string
 	oneofType string // field may is oneof
 	body      fastAPIBodyGenerator
+	isPointer bool
 }
 
 func (f *fgField) parentName() string {
@@ -334,8 +337,9 @@ type fastAPIBodyGenerator interface {
 
 // no *struct here
 type bodyBase struct {
-	TypeName string
-	APIType  string
+	TypeName  string
+	APIType   string
+	IsPointer bool
 }
 
 func (f *bodyBase) typeName() string {
@@ -343,14 +347,18 @@ func (f *bodyBase) typeName() string {
 }
 
 func (f *bodyBase) bodyFastRead(g *protogen.GeneratedFile, setter string, appendSetter bool) {
+	var mayPointer string = ""
+	if f.IsPointer {
+		mayPointer = "*"
+	}
 	if !appendSetter {
-		g.P(fmt.Sprintf("%s, offset, err = fastpb.Read%s(buf[offset:], _type)", setter, f.APIType))
+		g.P(fmt.Sprintf("%s, offset, err = "+mayPointer+"fastpb.Read%s(buf[offset:], _type)", setter, f.APIType))
 		g.P(`return offset, err`)
 		return
 	}
 	// appendSetter
 	g.P(fmt.Sprintf("var v %s", f.TypeName))
-	g.P(fmt.Sprintf("v, offset, err = fastpb.Read%s(buf[offset:], _type)", f.APIType))
+	g.P(fmt.Sprintf("v, offset, err = "+mayPointer+"fastpb.Read%s(buf[offset:], _type)", f.APIType))
 	g.P(`if err != nil { return offset, err }`)
 	g.P(fmt.Sprintf("%s = append(%s, v)", setter, setter))
 	g.P(`return offset, err`)
@@ -599,4 +607,24 @@ func parseTypeName(desc protoreflect.Descriptor, fdesc *descriptorpb.FileDescrip
 		}
 		return name
 	}
+}
+
+func isPointer(field *protogen.Field) (isPointer bool) {
+	if field.Desc.IsWeak() {
+		return false
+	}
+	isPointer = field.Desc.HasPresence()
+	switch field.Desc.Kind() {
+	case protoreflect.BytesKind:
+		isPointer = false
+	case protoreflect.MessageKind, protoreflect.GroupKind:
+		isPointer = false
+	}
+	switch {
+	case field.Desc.IsList():
+		return false
+	case field.Desc.IsMap():
+		return false
+	}
+	return isPointer
 }
