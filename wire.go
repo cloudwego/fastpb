@@ -8,7 +8,7 @@
 // For marshaling and unmarshaling entire protobuf messages,
 // use the "google.golang.org/protobuf/proto" package instead.
 //
-// This file may have been modified by CloudWeGo authors. (“CloudWeGo Modifications”).
+// This file may have been modified by CloudWeGo authors. ("CloudWeGo Modifications").
 // All CloudWeGo Modifications are Copyright 2022 CloudWeGo authors.
 
 package fastpb
