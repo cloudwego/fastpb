@@ -9,6 +9,6 @@ header:
 
   paths-ignore:
     - wire.go
-    - examples/fastpb_gen/*
+    - examples/fastpb_gen/**
 
   comment: on-failure
