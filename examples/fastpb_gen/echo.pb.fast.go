@@ -6,7 +6,6 @@ import (
 	fmt "fmt"
 	fastpb "github.com/cloudwego/fastpb"
 	nested "github.com/cloudwego/fastpb/examples/fastpb_gen/nested"
-	anypb "google.golang.org/protobuf/types/known/anypb"
 )
 
 func (x *Message) FastRead(buf []byte, _type int8, number int32) (offset int, err error) {
@@ -206,13 +205,48 @@ func (x *Message) FastRead(buf []byte, _type int8, number int32) (offset int, er
 		if err != nil {
 			goto ReadFieldError
 		}
-	case 60:
-		offset, err = x.fastReadField60(buf, _type)
+	case 51:
+		offset, err = x.fastReadField51(buf, _type)
 		if err != nil {
 			goto ReadFieldError
 		}
-	case 61:
-		offset, err = x.fastReadField61(buf, _type)
+	case 52:
+		offset, err = x.fastReadField52(buf, _type)
+		if err != nil {
+			goto ReadFieldError
+		}
+	case 53:
+		offset, err = x.fastReadField53(buf, _type)
+		if err != nil {
+			goto ReadFieldError
+		}
+	case 54:
+		offset, err = x.fastReadField54(buf, _type)
+		if err != nil {
+			goto ReadFieldError
+		}
+	case 55:
+		offset, err = x.fastReadField55(buf, _type)
+		if err != nil {
+			goto ReadFieldError
+		}
+	case 56:
+		offset, err = x.fastReadField56(buf, _type)
+		if err != nil {
+			goto ReadFieldError
+		}
+	case 57:
+		offset, err = x.fastReadField57(buf, _type)
+		if err != nil {
+			goto ReadFieldError
+		}
+	case 58:
+		offset, err = x.fastReadField58(buf, _type)
+		if err != nil {
+			goto ReadFieldError
+		}
+	case 59:
+		offset, err = x.fastReadField59(buf, _type)
 		if err != nil {
 			goto ReadFieldError
 		}
@@ -674,23 +708,61 @@ func (x *Message) fastReadField50(buf []byte, _type int8) (offset int, err error
 	return offset, nil
 }
 
-func (x *Message) fastReadField60(buf []byte, _type int8) (offset int, err error) {
-	var v anypb.Any
-	offset, err = fastpb.ReadMessage(buf[offset:], _type, &v)
-	if err != nil {
-		return offset, err
-	}
-	x.Field60 = &v
-	return offset, nil
+func (x *Message) fastReadField51(buf []byte, _type int8) (offset int, err error) {
+	tmp, offset, err := fastpb.ReadInt32(buf[offset:], _type)
+	x.Field51 = &tmp
+	return offset, err
 }
 
-func (x *Message) fastReadField61(buf []byte, _type int8) (offset int, err error) {
-	var v anypb.Any
+func (x *Message) fastReadField52(buf []byte, _type int8) (offset int, err error) {
+	tmp, offset, err := fastpb.ReadInt64(buf[offset:], _type)
+	x.Field52 = &tmp
+	return offset, err
+}
+
+func (x *Message) fastReadField53(buf []byte, _type int8) (offset int, err error) {
+	tmp, offset, err := fastpb.ReadUint32(buf[offset:], _type)
+	x.Field53 = &tmp
+	return offset, err
+}
+
+func (x *Message) fastReadField54(buf []byte, _type int8) (offset int, err error) {
+	tmp, offset, err := fastpb.ReadUint64(buf[offset:], _type)
+	x.Field54 = &tmp
+	return offset, err
+}
+
+func (x *Message) fastReadField55(buf []byte, _type int8) (offset int, err error) {
+	tmp, offset, err := fastpb.ReadSint32(buf[offset:], _type)
+	x.Field55 = &tmp
+	return offset, err
+}
+
+func (x *Message) fastReadField56(buf []byte, _type int8) (offset int, err error) {
+	tmp, offset, err := fastpb.ReadSint64(buf[offset:], _type)
+	x.Field56 = &tmp
+	return offset, err
+}
+
+func (x *Message) fastReadField57(buf []byte, _type int8) (offset int, err error) {
+	tmp, offset, err := fastpb.ReadBool(buf[offset:], _type)
+	x.Field57 = &tmp
+	return offset, err
+}
+
+func (x *Message) fastReadField58(buf []byte, _type int8) (offset int, err error) {
+	tmp, offset, err := fastpb.ReadString(buf[offset:], _type)
+	x.Field58 = &tmp
+	return offset, err
+}
+
+func (x *Message) fastReadField59(buf []byte, _type int8) (offset int, err error) {
+	var v Message
 	offset, err = fastpb.ReadMessage(buf[offset:], _type, &v)
 	if err != nil {
 		return offset, err
 	}
-	x.Field61 = append(x.Field61, &v)
+	x.Field59 = &v
 	return offset, nil
 }
 
@@ -963,8 +1035,15 @@ func (x *Message) FastWrite(buf []byte) (offset int) {
 	offset += x.fastWriteField44(buf[offset:])
 	offset += x.fastWriteField45(buf[offset:])
 	offset += x.fastWriteField50(buf[offset:])
-	offset += x.fastWriteField60(buf[offset:])
-	offset += x.fastWriteField61(buf[offset:])
+	offset += x.fastWriteField51(buf[offset:])
+	offset += x.fastWriteField52(buf[offset:])
+	offset += x.fastWriteField53(buf[offset:])
+	offset += x.fastWriteField54(buf[offset:])
+	offset += x.fastWriteField55(buf[offset:])
+	offset += x.fastWriteField56(buf[offset:])
+	offset += x.fastWriteField57(buf[offset:])
+	offset += x.fastWriteField58(buf[offset:])
+	offset += x.fastWriteField59(buf[offset:])
 	return offset
 }
 
@@ -1107,7 +1186,7 @@ func (x *Message) fastWriteField20(buf []byte) (offset int) {
 }
 
 func (x *Message) fastWriteField21(buf []byte) (offset int) {
-	if len(x.Field21) == 0 {
+	if x.Field21 == nil {
 		return offset
 	}
 	for i := range x.Field21 {
@@ -1117,7 +1196,7 @@ func (x *Message) fastWriteField21(buf []byte) (offset int) {
 }
 
 func (x *Message) fastWriteField22(buf []byte) (offset int) {
-	if len(x.Field22) == 0 {
+	if x.Field22 == nil {
 		return offset
 	}
 	for k, v := range x.Field22 {
@@ -1133,7 +1212,7 @@ func (x *Message) fastWriteField22(buf []byte) (offset int) {
 }
 
 func (x *Message) fastWriteField23(buf []byte) (offset int) {
-	if len(x.Field23) == 0 {
+	if x.Field23 == nil {
 		return offset
 	}
 	for k, v := range x.Field23 {
@@ -1149,7 +1228,7 @@ func (x *Message) fastWriteField23(buf []byte) (offset int) {
 }
 
 func (x *Message) fastWriteField24(buf []byte) (offset int) {
-	if len(x.Field24) == 0 {
+	if x.Field24 == nil {
 		return offset
 	}
 	for k, v := range x.Field24 {
@@ -1189,7 +1268,7 @@ func (x *Message) fastWriteField28(buf []byte) (offset int) {
 }
 
 func (x *Message) fastWriteField29(buf []byte) (offset int) {
-	if len(x.Field29) == 0 {
+	if x.Field29 == nil {
 		return offset
 	}
 	for k, v := range x.Field29 {
@@ -1229,7 +1308,7 @@ func (x *Message) fastWriteField31(buf []byte) (offset int) {
 }
 
 func (x *Message) fastWriteField32(buf []byte) (offset int) {
-	if len(x.Field32) == 0 {
+	if x.Field32 == nil {
 		return offset
 	}
 	for k, v := range x.Field32 {
@@ -1269,7 +1348,7 @@ func (x *Message) fastWriteField34(buf []byte) (offset int) {
 }
 
 func (x *Message) fastWriteField35(buf []byte) (offset int) {
-	if len(x.Field35) == 0 {
+	if x.Field35 == nil {
 		return offset
 	}
 	for k, v := range x.Field35 {
@@ -1309,7 +1388,7 @@ func (x *Message) fastWriteField37(buf []byte) (offset int) {
 }
 
 func (x *Message) fastWriteField38(buf []byte) (offset int) {
-	if len(x.Field38) == 0 {
+	if x.Field38 == nil {
 		return offset
 	}
 	for k, v := range x.Field38 {
@@ -1372,21 +1451,75 @@ func (x *Message) fastWriteField50(buf []byte) (offset int) {
 	return offset
 }
 
-func (x *Message) fastWriteField60(buf []byte) (offset int) {
-	if x.Field60 == nil {
+func (x *Message) fastWriteField51(buf []byte) (offset int) {
+	if x.Field51 == nil {
 		return offset
 	}
-	offset += fastpb.WriteMessage(buf[offset:], 60, x.Field60)
+	offset += fastpb.WriteInt32(buf[offset:], 51, *x.Field51)
 	return offset
 }
 
-func (x *Message) fastWriteField61(buf []byte) (offset int) {
-	if len(x.Field61) == 0 {
+func (x *Message) fastWriteField52(buf []byte) (offset int) {
+	if x.Field52 == nil {
 		return offset
 	}
-	for i := range x.Field61 {
-		offset += fastpb.WriteMessage(buf[offset:], 61, x.Field61[i])
+	offset += fastpb.WriteInt64(buf[offset:], 52, *x.Field52)
+	return offset
+}
+
+func (x *Message) fastWriteField53(buf []byte) (offset int) {
+	if x.Field53 == nil {
+		return offset
 	}
+	offset += fastpb.WriteUint32(buf[offset:], 53, *x.Field53)
+	return offset
+}
+
+func (x *Message) fastWriteField54(buf []byte) (offset int) {
+	if x.Field54 == nil {
+		return offset
+	}
+	offset += fastpb.WriteUint64(buf[offset:], 54, *x.Field54)
+	return offset
+}
+
+func (x *Message) fastWriteField55(buf []byte) (offset int) {
+	if x.Field55 == nil {
+		return offset
+	}
+	offset += fastpb.WriteSint32(buf[offset:], 55, *x.Field55)
+	return offset
+}
+
+func (x *Message) fastWriteField56(buf []byte) (offset int) {
+	if x.Field56 == nil {
+		return offset
+	}
+	offset += fastpb.WriteSint64(buf[offset:], 56, *x.Field56)
+	return offset
+}
+
+func (x *Message) fastWriteField57(buf []byte) (offset int) {
+	if x.Field57 == nil {
+		return offset
+	}
+	offset += fastpb.WriteBool(buf[offset:], 57, *x.Field57)
+	return offset
+}
+
+func (x *Message) fastWriteField58(buf []byte) (offset int) {
+	if x.Field58 == nil {
+		return offset
+	}
+	offset += fastpb.WriteString(buf[offset:], 58, *x.Field58)
+	return offset
+}
+
+func (x *Message) fastWriteField59(buf []byte) (offset int) {
+	if x.Field59 == nil {
+		return offset
+	}
+	offset += fastpb.WriteMessage(buf[offset:], 59, x.Field59)
 	return offset
 }
 
@@ -1502,7 +1635,7 @@ func (x *Message_ConditionTree) FastWrite(buf []byte) (offset int) {
 }
 
 func (x *Message_ConditionTree) fastWriteField1(buf []byte) (offset int) {
-	if len(x.Field1) == 0 {
+	if x.Field1 == nil {
 		return offset
 	}
 	for k, v := range x.Field1 {
@@ -1518,7 +1651,7 @@ func (x *Message_ConditionTree) fastWriteField1(buf []byte) (offset int) {
 }
 
 func (x *Message_ConditionTree) fastWriteField2(buf []byte) (offset int) {
-	if len(x.Field2) == 0 {
+	if x.Field2 == nil {
 		return offset
 	}
 	for i := range x.Field2 {
@@ -1570,8 +1703,15 @@ func (x *Message) Size() (n int) {
 	n += x.sizeField44()
 	n += x.sizeField45()
 	n += x.sizeField50()
-	n += x.sizeField60()
-	n += x.sizeField61()
+	n += x.sizeField51()
+	n += x.sizeField52()
+	n += x.sizeField53()
+	n += x.sizeField54()
+	n += x.sizeField55()
+	n += x.sizeField56()
+	n += x.sizeField57()
+	n += x.sizeField58()
+	n += x.sizeField59()
 	return n
 }
 
@@ -1714,7 +1854,7 @@ func (x *Message) sizeField20() (n int) {
 }
 
 func (x *Message) sizeField21() (n int) {
-	if len(x.Field21) == 0 {
+	if x.Field21 == nil {
 		return n
 	}
 	for i := range x.Field21 {
@@ -1724,7 +1864,7 @@ func (x *Message) sizeField21() (n int) {
 }
 
 func (x *Message) sizeField22() (n int) {
-	if len(x.Field22) == 0 {
+	if x.Field22 == nil {
 		return n
 	}
 	for k, v := range x.Field22 {
@@ -1740,7 +1880,7 @@ func (x *Message) sizeField22() (n int) {
 }
 
 func (x *Message) sizeField23() (n int) {
-	if len(x.Field23) == 0 {
+	if x.Field23 == nil {
 		return n
 	}
 	for k, v := range x.Field23 {
@@ -1756,7 +1896,7 @@ func (x *Message) sizeField23() (n int) {
 }
 
 func (x *Message) sizeField24() (n int) {
-	if len(x.Field24) == 0 {
+	if x.Field24 == nil {
 		return n
 	}
 	for k, v := range x.Field24 {
@@ -1796,7 +1936,7 @@ func (x *Message) sizeField28() (n int) {
 }
 
 func (x *Message) sizeField29() (n int) {
-	if len(x.Field29) == 0 {
+	if x.Field29 == nil {
 		return n
 	}
 	for k, v := range x.Field29 {
@@ -1836,7 +1976,7 @@ func (x *Message) sizeField31() (n int) {
 }
 
 func (x *Message) sizeField32() (n int) {
-	if len(x.Field32) == 0 {
+	if x.Field32 == nil {
 		return n
 	}
 	for k, v := range x.Field32 {
@@ -1876,7 +2016,7 @@ func (x *Message) sizeField34() (n int) {
 }
 
 func (x *Message) sizeField35() (n int) {
-	if len(x.Field35) == 0 {
+	if x.Field35 == nil {
 		return n
 	}
 	for k, v := range x.Field35 {
@@ -1916,7 +2056,7 @@ func (x *Message) sizeField37() (n int) {
 }
 
 func (x *Message) sizeField38() (n int) {
-	if len(x.Field38) == 0 {
+	if x.Field38 == nil {
 		return n
 	}
 	for k, v := range x.Field38 {
@@ -1979,21 +2119,75 @@ func (x *Message) sizeField50() (n int) {
 	return n
 }
 
-func (x *Message) sizeField60() (n int) {
-	if x.Field60 == nil {
+func (x *Message) sizeField51() (n int) {
+	if x.Field51 == nil {
 		return n
 	}
-	n += fastpb.SizeMessage(60, x.Field60)
+	n += fastpb.SizeInt32(51, *x.Field51)
 	return n
 }
 
-func (x *Message) sizeField61() (n int) {
-	if len(x.Field61) == 0 {
+func (x *Message) sizeField52() (n int) {
+	if x.Field52 == nil {
 		return n
 	}
-	for i := range x.Field61 {
-		n += fastpb.SizeMessage(61, x.Field61[i])
+	n += fastpb.SizeInt64(52, *x.Field52)
+	return n
+}
+
+func (x *Message) sizeField53() (n int) {
+	if x.Field53 == nil {
+		return n
 	}
+	n += fastpb.SizeUint32(53, *x.Field53)
+	return n
+}
+
+func (x *Message) sizeField54() (n int) {
+	if x.Field54 == nil {
+		return n
+	}
+	n += fastpb.SizeUint64(54, *x.Field54)
+	return n
+}
+
+func (x *Message) sizeField55() (n int) {
+	if x.Field55 == nil {
+		return n
+	}
+	n += fastpb.SizeSint32(55, *x.Field55)
+	return n
+}
+
+func (x *Message) sizeField56() (n int) {
+	if x.Field56 == nil {
+		return n
+	}
+	n += fastpb.SizeSint64(56, *x.Field56)
+	return n
+}
+
+func (x *Message) sizeField57() (n int) {
+	if x.Field57 == nil {
+		return n
+	}
+	n += fastpb.SizeBool(57, *x.Field57)
+	return n
+}
+
+func (x *Message) sizeField58() (n int) {
+	if x.Field58 == nil {
+		return n
+	}
+	n += fastpb.SizeString(58, *x.Field58)
+	return n
+}
+
+func (x *Message) sizeField59() (n int) {
+	if x.Field59 == nil {
+		return n
+	}
+	n += fastpb.SizeMessage(59, x.Field59)
 	return n
 }
 
@@ -2109,7 +2303,7 @@ func (x *Message_ConditionTree) Size() (n int) {
 }
 
 func (x *Message_ConditionTree) sizeField1() (n int) {
-	if len(x.Field1) == 0 {
+	if x.Field1 == nil {
 		return n
 	}
 	for k, v := range x.Field1 {
@@ -2125,7 +2319,7 @@ func (x *Message_ConditionTree) sizeField1() (n int) {
 }
 
 func (x *Message_ConditionTree) sizeField2() (n int) {
-	if len(x.Field2) == 0 {
+	if x.Field2 == nil {
 		return n
 	}
 	for i := range x.Field2 {
@@ -2174,8 +2368,15 @@ var fieldIDToName_Message = map[int32]string{
 	44: "Field44",
 	45: "Field45",
 	50: "Field50",
-	60: "Field60",
-	61: "Field61",
+	51: "Field51",
+	52: "Field52",
+	53: "Field53",
+	54: "Field54",
+	55: "Field55",
+	56: "Field56",
+	57: "Field57",
+	58: "Field58",
+	59: "Field59",
 }
 
 var fieldIDToName_Request = map[int32]string{
@@ -2202,4 +2403,3 @@ var fieldIDToName_Message_ConditionTree = map[int32]string{
 }
 
 var _ = nested.File_nested_proto
-var _ = anypb.File_anypb_proto

@@ -118,11 +118,13 @@ func (fg *fastgen) NewMessage(m *protogen.Message) FastAPIGenerator {
 func (fg *fastgen) NewField(f *protogen.Field) FastAPIGenerator {
 	field := &fgField{}
 	field.number = fmt.Sprintf("%d", f.Desc.Number())
-	if f.Oneof != nil {
+	// explicit oneof
+	if f.Oneof != nil && !f.Oneof.Desc.IsSynthetic() {
 		field.oneofType = f.GoIdent.GoName
 	}
-	field.body = fg.newFieldBody(f, f.Desc, f.Desc.IsList())
 	field.f = f
+	field.isPointer = isPointer(f)
+	field.body = fg.newFieldBody(f, f.Desc, f.Desc.IsList())
 	return field
 }
 
@@ -283,14 +285,14 @@ func (f *fgField) GenFastWrite(g *protogen.GeneratedFile) {
 		setter = fmt.Sprintf("x.Get%s()", f.name())
 	}
 	switch {
+	case f.f.Desc.Kind() == protoreflect.MessageKind, f.isPointer:
+		g.P(fmt.Sprintf("if %s == nil { return offset }", setter))
 	case f.f.Desc.IsMap() || f.f.Desc.IsList() || f.f.Desc.Kind() == protoreflect.BytesKind:
 		g.P(fmt.Sprintf("if len(%s) == 0 { return offset }", setter))
 	case f.f.Desc.Kind() == protoreflect.BoolKind:
 		g.P(fmt.Sprintf("if !%s { return offset }", setter))
 	case f.f.Desc.Kind() == protoreflect.StringKind:
 		g.P(fmt.Sprintf(`if %s == "" { return offset }`, setter))
-	case f.f.Desc.Kind() == protoreflect.MessageKind:
-		g.P(fmt.Sprintf("if %s == nil { return offset }", setter))
 	default:
 		g.P(fmt.Sprintf("if %s == 0 { return offset }", setter))
 	}
@@ -309,14 +311,14 @@ func (f *fgField) GenFastSize(g *protogen.GeneratedFile) {
 		setter = fmt.Sprintf("x.Get%s()", f.name())
 	}
 	switch {
+	case f.f.Desc.Kind() == protoreflect.MessageKind, f.isPointer:
+		g.P(fmt.Sprintf("if %s == nil { return n }", setter))
 	case f.f.Desc.IsMap() || f.f.Desc.IsList() || f.f.Desc.Kind() == protoreflect.BytesKind:
 		g.P(fmt.Sprintf("if len(%s) == 0 { return n }", setter))
 	case f.f.Desc.Kind() == protoreflect.BoolKind:
 		g.P(fmt.Sprintf("if !%s { return n }", setter))
 	case f.f.Desc.Kind() == protoreflect.StringKind:
 		g.P(fmt.Sprintf(`if %s == "" { return n }`, setter))
-	case f.f.Desc.Kind() == protoreflect.MessageKind:
-		g.P(fmt.Sprintf("if %s == nil { return n }", setter))
 	default:
 		g.P(fmt.Sprintf("if %s == 0 { return n }", setter))
 	}
@@ -347,29 +349,43 @@ func (f *bodyBase) typeName() string {
 }
 
 func (f *bodyBase) bodyFastRead(g *protogen.GeneratedFile, setter string, appendSetter bool) {
-	var mayPointer string = ""
-	if f.IsPointer {
-		mayPointer = "*"
-	}
 	if !appendSetter {
-		g.P(fmt.Sprintf("%s, offset, err = "+mayPointer+"fastpb.Read%s(buf[offset:], _type)", setter, f.APIType))
+		if f.IsPointer {
+			g.P(fmt.Sprintf("tmp, offset, err := fastpb.Read%s(buf[offset:], _type)", f.APIType))
+			g.P(fmt.Sprintf("%s = &tmp", setter))
+		} else {
+			g.P(fmt.Sprintf("%s, offset, err = fastpb.Read%s(buf[offset:], _type)", setter, f.APIType))
+		}
 		g.P(`return offset, err`)
 		return
 	}
 	// appendSetter
 	g.P(fmt.Sprintf("var v %s", f.TypeName))
-	g.P(fmt.Sprintf("v, offset, err = "+mayPointer+"fastpb.Read%s(buf[offset:], _type)", f.APIType))
+	if f.IsPointer {
+		g.P(fmt.Sprintf("tmp, offset, err := fastpb.Read%s(buf[offset:], _type)", f.APIType))
+		g.P(fmt.Sprintf("%s = &tmp", setter))
+	} else {
+		g.P(fmt.Sprintf("v, offset, err = fastpb.Read%s(buf[offset:], _type)", f.APIType))
+	}
 	g.P(`if err != nil { return offset, err }`)
 	g.P(fmt.Sprintf("%s = append(%s, v)", setter, setter))
 	g.P(`return offset, err`)
 }
 
 func (f *bodyBase) bodyFastWrite(g *protogen.GeneratedFile, setter, number string) {
-	g.P(fmt.Sprintf("offset += fastpb.Write%s(buf[offset:], %s, %s)", f.APIType, number, setter))
+	mayPointer := ""
+	if f.IsPointer {
+		mayPointer = "*"
+	}
+	g.P(fmt.Sprintf("offset += fastpb.Write%s(buf[offset:], %s, %s%s)", f.APIType, number, mayPointer, setter))
 }
 
 func (f *bodyBase) bodyFastSize(g *protogen.GeneratedFile, setter, number string) {
-	g.P(fmt.Sprintf("n += fastpb.Size%s(%s, %s)", f.APIType, number, setter))
+	mayPointer := ""
+	if f.IsPointer {
+		mayPointer = "*"
+	}
+	g.P(fmt.Sprintf("n += fastpb.Size%s(%s, %s%s)", f.APIType, number, mayPointer, setter))
 }
 
 // enum
@@ -610,21 +626,5 @@ func parseTypeName(desc protoreflect.Descriptor, fdesc *descriptorpb.FileDescrip
 }
 
 func isPointer(field *protogen.Field) (isPointer bool) {
-	if field.Desc.IsWeak() {
-		return false
-	}
-	isPointer = field.Desc.HasPresence()
-	switch field.Desc.Kind() {
-	case protoreflect.BytesKind:
-		isPointer = false
-	case protoreflect.MessageKind, protoreflect.GroupKind:
-		isPointer = false
-	}
-	switch {
-	case field.Desc.IsList():
-		return false
-	case field.Desc.IsMap():
-		return false
-	}
-	return isPointer
+	return field.Oneof != nil && field.Oneof.Desc.IsSynthetic()
 }

@@ -4,8 +4,6 @@ package nested.echo;
 
 option go_package = "github.com/cloudwego/fastpb/examples/fastpb_gen/nested";
 
-import "google/protobuf/any.proto";
-
 enum MsgEnum {
     ENUM0 = 0;
     ENUM1 = 1;
@@ -69,7 +67,4 @@ enum MsgEnum {
       repeated Condition field2 = 2;
     }
     Condition field50 = 50;
-  
-      google.protobuf.Any field60 = 60; // []byte
-      repeated google.protobuf.Any field61 = 61; // []byte
   }

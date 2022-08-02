@@ -5,7 +5,6 @@ package nested
 import (
 	fmt "fmt"
 	fastpb "github.com/cloudwego/fastpb"
-	anypb "google.golang.org/protobuf/types/known/anypb"
 )
 
 func (x *Message) FastRead(buf []byte, _type int8, number int32) (offset int, err error) {
@@ -157,16 +156,6 @@ func (x *Message) FastRead(buf []byte, _type int8, number int32) (offset int, er
 		}
 	case 50:
 		offset, err = x.fastReadField50(buf, _type)
-		if err != nil {
-			goto ReadFieldError
-		}
-	case 60:
-		offset, err = x.fastReadField60(buf, _type)
-		if err != nil {
-			goto ReadFieldError
-		}
-	case 61:
-		offset, err = x.fastReadField61(buf, _type)
 		if err != nil {
 			goto ReadFieldError
 		}
@@ -475,26 +464,6 @@ func (x *Message) fastReadField50(buf []byte, _type int8) (offset int, err error
 	return offset, nil
 }
 
-func (x *Message) fastReadField60(buf []byte, _type int8) (offset int, err error) {
-	var v anypb.Any
-	offset, err = fastpb.ReadMessage(buf[offset:], _type, &v)
-	if err != nil {
-		return offset, err
-	}
-	x.Field60 = &v
-	return offset, nil
-}
-
-func (x *Message) fastReadField61(buf []byte, _type int8) (offset int, err error) {
-	var v anypb.Any
-	offset, err = fastpb.ReadMessage(buf[offset:], _type, &v)
-	if err != nil {
-		return offset, err
-	}
-	x.Field61 = append(x.Field61, &v)
-	return offset, nil
-}
-
 func (x *Message_Condition) FastRead(buf []byte, _type int8, number int32) (offset int, err error) {
 	switch number {
 	case 2:
@@ -613,8 +582,6 @@ func (x *Message) FastWrite(buf []byte) (offset int) {
 	offset += x.fastWriteField42(buf[offset:])
 	offset += x.fastWriteField43(buf[offset:])
 	offset += x.fastWriteField50(buf[offset:])
-	offset += x.fastWriteField60(buf[offset:])
-	offset += x.fastWriteField61(buf[offset:])
 	return offset
 }
 
@@ -757,7 +724,7 @@ func (x *Message) fastWriteField20(buf []byte) (offset int) {
 }
 
 func (x *Message) fastWriteField21(buf []byte) (offset int) {
-	if len(x.Field21) == 0 {
+	if x.Field21 == nil {
 		return offset
 	}
 	for i := range x.Field21 {
@@ -767,7 +734,7 @@ func (x *Message) fastWriteField21(buf []byte) (offset int) {
 }
 
 func (x *Message) fastWriteField22(buf []byte) (offset int) {
-	if len(x.Field22) == 0 {
+	if x.Field22 == nil {
 		return offset
 	}
 	for k, v := range x.Field22 {
@@ -783,7 +750,7 @@ func (x *Message) fastWriteField22(buf []byte) (offset int) {
 }
 
 func (x *Message) fastWriteField23(buf []byte) (offset int) {
-	if len(x.Field23) == 0 {
+	if x.Field23 == nil {
 		return offset
 	}
 	for k, v := range x.Field23 {
@@ -823,7 +790,7 @@ func (x *Message) fastWriteField34(buf []byte) (offset int) {
 }
 
 func (x *Message) fastWriteField35(buf []byte) (offset int) {
-	if len(x.Field35) == 0 {
+	if x.Field35 == nil {
 		return offset
 	}
 	for k, v := range x.Field35 {
@@ -863,7 +830,7 @@ func (x *Message) fastWriteField37(buf []byte) (offset int) {
 }
 
 func (x *Message) fastWriteField38(buf []byte) (offset int) {
-	if len(x.Field38) == 0 {
+	if x.Field38 == nil {
 		return offset
 	}
 	for k, v := range x.Field38 {
@@ -910,24 +877,6 @@ func (x *Message) fastWriteField50(buf []byte) (offset int) {
 	return offset
 }
 
-func (x *Message) fastWriteField60(buf []byte) (offset int) {
-	if x.Field60 == nil {
-		return offset
-	}
-	offset += fastpb.WriteMessage(buf[offset:], 60, x.Field60)
-	return offset
-}
-
-func (x *Message) fastWriteField61(buf []byte) (offset int) {
-	if len(x.Field61) == 0 {
-		return offset
-	}
-	for i := range x.Field61 {
-		offset += fastpb.WriteMessage(buf[offset:], 61, x.Field61[i])
-	}
-	return offset
-}
-
 func (x *Message_Condition) FastWrite(buf []byte) (offset int) {
 	if x == nil {
 		return offset
@@ -971,7 +920,7 @@ func (x *Message_ConditionTree) FastWrite(buf []byte) (offset int) {
 }
 
 func (x *Message_ConditionTree) fastWriteField2(buf []byte) (offset int) {
-	if len(x.Field2) == 0 {
+	if x.Field2 == nil {
 		return offset
 	}
 	for i := range x.Field2 {
@@ -1014,8 +963,6 @@ func (x *Message) Size() (n int) {
 	n += x.sizeField42()
 	n += x.sizeField43()
 	n += x.sizeField50()
-	n += x.sizeField60()
-	n += x.sizeField61()
 	return n
 }
 
@@ -1158,7 +1105,7 @@ func (x *Message) sizeField20() (n int) {
 }
 
 func (x *Message) sizeField21() (n int) {
-	if len(x.Field21) == 0 {
+	if x.Field21 == nil {
 		return n
 	}
 	for i := range x.Field21 {
@@ -1168,7 +1115,7 @@ func (x *Message) sizeField21() (n int) {
 }
 
 func (x *Message) sizeField22() (n int) {
-	if len(x.Field22) == 0 {
+	if x.Field22 == nil {
 		return n
 	}
 	for k, v := range x.Field22 {
@@ -1184,7 +1131,7 @@ func (x *Message) sizeField22() (n int) {
 }
 
 func (x *Message) sizeField23() (n int) {
-	if len(x.Field23) == 0 {
+	if x.Field23 == nil {
 		return n
 	}
 	for k, v := range x.Field23 {
@@ -1224,7 +1171,7 @@ func (x *Message) sizeField34() (n int) {
 }
 
 func (x *Message) sizeField35() (n int) {
-	if len(x.Field35) == 0 {
+	if x.Field35 == nil {
 		return n
 	}
 	for k, v := range x.Field35 {
@@ -1264,7 +1211,7 @@ func (x *Message) sizeField37() (n int) {
 }
 
 func (x *Message) sizeField38() (n int) {
-	if len(x.Field38) == 0 {
+	if x.Field38 == nil {
 		return n
 	}
 	for k, v := range x.Field38 {
@@ -1311,24 +1258,6 @@ func (x *Message) sizeField50() (n int) {
 	return n
 }
 
-func (x *Message) sizeField60() (n int) {
-	if x.Field60 == nil {
-		return n
-	}
-	n += fastpb.SizeMessage(60, x.Field60)
-	return n
-}
-
-func (x *Message) sizeField61() (n int) {
-	if len(x.Field61) == 0 {
-		return n
-	}
-	for i := range x.Field61 {
-		n += fastpb.SizeMessage(61, x.Field61[i])
-	}
-	return n
-}
-
 func (x *Message_Condition) Size() (n int) {
 	if x == nil {
 		return n
@@ -1372,7 +1301,7 @@ func (x *Message_ConditionTree) Size() (n int) {
 }
 
 func (x *Message_ConditionTree) sizeField2() (n int) {
-	if len(x.Field2) == 0 {
+	if x.Field2 == nil {
 		return n
 	}
 	for i := range x.Field2 {
@@ -1412,8 +1341,6 @@ var fieldIDToName_Message = map[int32]string{
 	42: "Field42",
 	43: "Field43",
 	50: "Field50",
-	60: "Field60",
-	61: "Field61",
 }
 
 var fieldIDToName_Message_Condition = map[int32]string{
@@ -1425,5 +1352,3 @@ var fieldIDToName_Message_Condition = map[int32]string{
 var fieldIDToName_Message_ConditionTree = map[int32]string{
 	2: "Field2",
 }
-
-var _ = anypb.File_anypb_proto
