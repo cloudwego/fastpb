@@ -25,7 +25,7 @@ import (
 	"google.golang.org/protobuf/compiler/protogen"
 
 	"github.com/cloudwego/fastpb"
-	"github.com/cloudwego/fastpb/protoc-gen-fastpb/generator"
+	genfastpb "github.com/cloudwego/fastpb/protoc-gen-fastpb/generator"
 )
 
 func main() {
@@ -41,7 +41,7 @@ func main() {
 	protogen.Options{}.Run(func(gen *protogen.Plugin) error {
 		for _, f := range gen.Files {
 			if f.Generate {
-				generator.GenerateFile(gen, f)
+				genfastpb.GenerateFile(gen, f)
 			}
 		}
 		gen.SupportedFeatures = gengo.SupportedFeatures
