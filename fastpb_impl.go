@@ -235,7 +235,7 @@ func (b impl) ReadBool(buf []byte, _type int8) (value bool, n int, err error) {
 		return value, 0, errUnknown
 	}
 
-	v, n := protowire.ConsumeVarint(buf)
+	v, n := ConsumeVarint(buf)
 	if n < 0 {
 		return value, 0, errDecode
 	}
@@ -248,7 +248,7 @@ func (b impl) ReadInt32(buf []byte, _type int8) (value int32, n int, err error) 
 	if wtyp != SkipTypeCheck && wtyp != protowire.VarintType {
 		return value, 0, errUnknown
 	}
-	v, n := protowire.ConsumeVarint(buf)
+	v, n := ConsumeVarint(buf)
 	if n < 0 {
 		return value, 0, errDecode
 	}
@@ -261,7 +261,7 @@ func (b impl) ReadInt64(buf []byte, _type int8) (value int64, n int, err error) 
 	if wtyp != SkipTypeCheck && wtyp != protowire.VarintType {
 		return value, 0, errUnknown
 	}
-	v, n := protowire.ConsumeVarint(buf)
+	v, n := ConsumeVarint(buf)
 	if n < 0 {
 		return value, 0, errDecode
 	}
@@ -274,7 +274,7 @@ func (b impl) ReadUint32(buf []byte, _type int8) (value uint32, n int, err error
 	if wtyp != SkipTypeCheck && wtyp != protowire.VarintType {
 		return value, 0, errUnknown
 	}
-	v, n := protowire.ConsumeVarint(buf)
+	v, n := ConsumeVarint(buf)
 	if n < 0 {
 		return value, 0, errDecode
 	}
@@ -287,7 +287,7 @@ func (b impl) ReadUint64(buf []byte, _type int8) (value uint64, n int, err error
 	if wtyp != SkipTypeCheck && wtyp != protowire.VarintType {
 		return value, 0, errUnknown
 	}
-	v, n := protowire.ConsumeVarint(buf)
+	v, n := ConsumeVarint(buf)
 	if n < 0 {
 		return value, 0, errDecode
 	}
@@ -300,7 +300,7 @@ func (b impl) ReadSint32(buf []byte, _type int8) (value int32, n int, err error)
 	if wtyp != SkipTypeCheck && wtyp != protowire.VarintType {
 		return value, 0, errUnknown
 	}
-	v, n := protowire.ConsumeVarint(buf)
+	v, n := ConsumeVarint(buf)
 	if n < 0 {
 		return value, 0, errDecode
 	}
@@ -313,7 +313,7 @@ func (b impl) ReadSint64(buf []byte, _type int8) (value int64, n int, err error)
 	if wtyp != SkipTypeCheck && wtyp != protowire.VarintType {
 		return value, 0, errUnknown
 	}
-	v, n := protowire.ConsumeVarint(buf)
+	v, n := ConsumeVarint(buf)
 	if n < 0 {
 		return value, 0, errDecode
 	}
@@ -404,7 +404,7 @@ func (b impl) ReadString(buf []byte, _type int8) (value string, n int, err error
 	if wtyp != protowire.BytesType {
 		return value, 0, errUnknown
 	}
-	v, n := protowire.ConsumeBytes(buf)
+	v, n := ConsumeBytes(buf)
 	if n < 0 {
 		return value, 0, errDecode
 	}
@@ -421,7 +421,7 @@ func (b impl) ReadBytes(buf []byte, _type int8) (value []byte, n int, err error)
 	if wtyp != protowire.BytesType {
 		return value, 0, errUnknown
 	}
-	v, n := protowire.ConsumeBytes(buf)
+	v, n := ConsumeBytes(buf)
 	if n < 0 {
 		return value, 0, errDecode
 	}
@@ -435,7 +435,7 @@ func (b impl) ReadList(buf []byte, _type int8, single Unmarshal) (n int, err err
 	wtyp := protowire.Type(_type)
 	if wtyp == protowire.BytesType {
 		var framed []byte
-		framed, n = protowire.ConsumeBytes(buf)
+		framed, n = ConsumeBytes(buf)
 		if n < 0 {
 			return 0, errDecode
 		}
@@ -459,7 +459,7 @@ func (b impl) ReadMapEntry(buf []byte, _type int8, umk, umv Unmarshal) (int, err
 	if wtyp != protowire.BytesType {
 		return 0, errUnknown
 	}
-	bs, n := protowire.ConsumeBytes(buf)
+	bs, n := ConsumeBytes(buf)
 	if n < 0 {
 		return 0, errDecode
 	}
@@ -468,7 +468,7 @@ func (b impl) ReadMapEntry(buf []byte, _type int8, umk, umv Unmarshal) (int, err
 	// Map entries are represented as a two-element message with fields
 	// containing the key and value.
 	for len(bs) > 0 {
-		num, wtyp, n := protowire.ConsumeTag(bs)
+		num, wtyp, n := ConsumeTag(bs)
 		if n < 0 {
 			return 0, errDecode
 		}
@@ -502,7 +502,7 @@ func (b impl) ReadMessage(buf []byte, _type int8, reader Reader) (n int, err err
 	}
 	// framed
 	if wtyp == protowire.BytesType {
-		buf, n = protowire.ConsumeBytes(buf)
+		buf, n = ConsumeBytes(buf)
 		if n < 0 {
 			return 0, errDecode
 		}
@@ -510,7 +510,7 @@ func (b impl) ReadMessage(buf []byte, _type int8, reader Reader) (n int, err err
 	offset := 0
 	for offset < len(buf) {
 		// Parse the tag (field number and wire type).
-		num, wtyp, l := protowire.ConsumeTag(buf[offset:])
+		num, wtyp, l := ConsumeTag(buf[offset:])
 		offset += l
 		if l < 0 {
 			return offset, errDecode
