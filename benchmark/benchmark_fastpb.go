@@ -1,0 +1,100 @@
+/*
+ * Copyright 2022 CloudWeGo Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package benchmark
+
+import (
+	fastpb_gen "github.com/cloudwego/fastpb/benchmark/fastpb_gen"
+)
+
+var (
+	_fastpbNumber *fastpb_gen.Number
+	_fastpbString *fastpb_gen.String
+	_fastpbList   *fastpb_gen.List
+	_fastpbMap    *fastpb_gen.Map
+)
+
+func fastpbNumber() *fastpb_gen.Number {
+	if _fastpbNumber != nil {
+		return _fastpbNumber
+	}
+	_fastpbNumber = &fastpb_gen.Number{
+		Field1:  _goNumber.Field1,
+		Field2:  _goNumber.Field2,
+		Field3:  _goNumber.Field3,
+		Field4:  _goNumber.Field4,
+		Field5:  _goNumber.Field5,
+		Field6:  _goNumber.Field6,
+		Field7:  _goNumber.Field7,
+		Field8:  _goNumber.Field8,
+		Field9:  _goNumber.Field9,
+		Field10: _goNumber.Field10,
+		Field11: _goNumber.Field11,
+		Field12: _goNumber.Field12,
+		Field13: _goNumber.Field13,
+	}
+	return _fastpbNumber
+}
+
+func fastpbString() *fastpb_gen.String {
+	if _fastpbString != nil {
+		return _fastpbString
+	}
+	_fastpbString = &fastpb_gen.String{
+		Field1: _goString.Field1,
+		Field2: _goString.Field2,
+	}
+	return _fastpbString
+}
+
+func fastpbList() *fastpb_gen.List {
+	if _fastpbList != nil {
+		return _fastpbList
+	}
+	_fastpbList = &fastpb_gen.List{
+		Field1:  _goList.Field1,
+		Field2:  _goList.Field2,
+		Field3:  _goList.Field3,
+		Field4:  _goList.Field4,
+		Field5:  _goList.Field5,
+		Field6:  _goList.Field6,
+		Field7:  _goList.Field7,
+		Field8:  _goList.Field8,
+		Field9:  _goList.Field9,
+		Field10: _goList.Field10,
+		Field11: _goList.Field11,
+		Field12: _goList.Field12,
+		Field13: _goList.Field13,
+		Field14: _goList.Field14,
+		Field15: _goList.Field15,
+	}
+	return _fastpbList
+}
+
+func fastpbMap() *fastpb_gen.Map {
+	if _fastpbMap != nil {
+		return _fastpbMap
+	}
+	_fastpbMap = &fastpb_gen.Map{
+		Field1: _goMap.Field1,
+		Field2: _goMap.Field2,
+		Field3: _goMap.Field3,
+		Field4: _goMap.Field4,
+		Field5: _goMap.Field5,
+		Field6: _goMap.Field6,
+	}
+	return _fastpbMap
+}

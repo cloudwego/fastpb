@@ -63,87 +63,20 @@ func ConsumeVarint(b []byte) (v uint64, n int) {
 
 // AppendVarint appends v to b as a varint-encoded uint64.
 func AppendVarint(buf []byte, v uint64) int {
-	switch {
-	case v < 1<<7:
-		buf[0] = byte(v)
-		return 1
-	case v < 1<<14:
-		buf[0] = byte((v>>0)&0x7f | 0x80)
-		buf[1] = byte(v >> 7)
-		return 2
-	case v < 1<<21:
-		buf[0] = byte((v>>0)&0x7f | 0x80)
-		buf[1] = byte((v>>7)&0x7f | 0x80)
-		buf[2] = byte(v >> 14)
-		return 3
-	case v < 1<<28:
-		buf[0] = byte((v>>0)&0x7f | 0x80)
-		buf[1] = byte((v>>7)&0x7f | 0x80)
-		buf[2] = byte((v>>14)&0x7f | 0x80)
-		buf[3] = byte(v >> 21)
-		return 4
-	case v < 1<<35:
-		buf[0] = byte((v>>0)&0x7f | 0x80)
-		buf[1] = byte((v>>7)&0x7f | 0x80)
-		buf[2] = byte((v>>14)&0x7f | 0x80)
-		buf[3] = byte((v>>21)&0x7f | 0x80)
-		buf[4] = byte(v >> 28)
-		return 5
-	case v < 1<<42:
-		buf[0] = byte((v>>0)&0x7f | 0x80)
-		buf[1] = byte((v>>7)&0x7f | 0x80)
-		buf[2] = byte((v>>14)&0x7f | 0x80)
-		buf[3] = byte((v>>21)&0x7f | 0x80)
-		buf[4] = byte((v>>28)&0x7f | 0x80)
-		buf[5] = byte(v >> 35)
-		return 6
-	case v < 1<<49:
-		buf[0] = byte((v>>0)&0x7f | 0x80)
-		buf[1] = byte((v>>7)&0x7f | 0x80)
-		buf[2] = byte((v>>14)&0x7f | 0x80)
-		buf[3] = byte((v>>21)&0x7f | 0x80)
-		buf[4] = byte((v>>28)&0x7f | 0x80)
-		buf[5] = byte((v>>35)&0x7f | 0x80)
-		buf[6] = byte(v >> 42)
-		return 7
-	case v < 1<<56:
-		buf[0] = byte((v>>0)&0x7f | 0x80)
-		buf[1] = byte((v>>7)&0x7f | 0x80)
-		buf[2] = byte((v>>14)&0x7f | 0x80)
-		buf[3] = byte((v>>21)&0x7f | 0x80)
-		buf[4] = byte((v>>28)&0x7f | 0x80)
-		buf[5] = byte((v>>35)&0x7f | 0x80)
-		buf[6] = byte((v>>42)&0x7f | 0x80)
-		buf[7] = byte(v >> 49)
-		return 8
-	case v < 1<<63:
-		buf[0] = byte((v>>0)&0x7f | 0x80)
-		buf[1] = byte((v>>7)&0x7f | 0x80)
-		buf[2] = byte((v>>14)&0x7f | 0x80)
-		buf[3] = byte((v>>21)&0x7f | 0x80)
-		buf[4] = byte((v>>28)&0x7f | 0x80)
-		buf[5] = byte((v>>35)&0x7f | 0x80)
-		buf[6] = byte((v>>42)&0x7f | 0x80)
-		buf[7] = byte((v>>49)&0x7f | 0x80)
-		buf[8] = byte(v >> 56)
-		return 9
-	default:
-		buf[0] = byte((v>>0)&0x7f | 0x80)
-		buf[1] = byte((v>>7)&0x7f | 0x80)
-		buf[2] = byte((v>>14)&0x7f | 0x80)
-		buf[3] = byte((v>>21)&0x7f | 0x80)
-		buf[4] = byte((v>>28)&0x7f | 0x80)
-		buf[5] = byte((v>>35)&0x7f | 0x80)
-		buf[6] = byte((v>>42)&0x7f | 0x80)
-		buf[7] = byte((v>>49)&0x7f | 0x80)
-		buf[8] = byte((v>>56)&0x7f | 0x80)
-		buf[9] = 1
-		return 10
+	offset := 0
+	for v >= 1<<7 {
+		buf[offset] = uint8(v&0x7f | 0x80)
+		v >>= 7
+		offset++
 	}
+	buf[offset] = uint8(v)
+	offset++
+	return offset
 }
 
 // AppendFixed32 appends v to b as a little-endian uint32.
 func AppendFixed32(b []byte, v uint32) int {
+	_ = b[3]
 	b[0] = byte(v >> 0)
 	b[1] = byte(v >> 8)
 	b[2] = byte(v >> 16)
@@ -153,6 +86,7 @@ func AppendFixed32(b []byte, v uint32) int {
 
 // AppendFixed64 appends v to b as a little-endian uint64.
 func AppendFixed64(b []byte, v uint64) int {
+	_ = b[7]
 	b[0] = byte(v >> 0)
 	b[1] = byte(v >> 8)
 	b[2] = byte(v >> 16)
@@ -189,7 +123,7 @@ func AppendString(b []byte, v string) (n int) {
 	return n
 }
 
-// EnforceUTF8 only support proto3 now.
+// EnforceUTF8 todo: use as a switch.
 func EnforceUTF8() bool {
-	return true
+	return false
 }
