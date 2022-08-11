@@ -478,6 +478,7 @@ func (f *bodyList) bodyFastWrite(g *protogen.GeneratedFile, setter, number strin
 		f.Element.bodyFastWrite(g, setter+"[numIdxOrVal]", "numTagOrKey")
 		g.P(`return offset`)
 		g.P(`})`)
+		return
 	}
 	g.P(fmt.Sprintf("for i := range %s {", setter))
 	f.Element.bodyFastWrite(g, setter+"[i]", number)
@@ -492,6 +493,7 @@ func (f *bodyList) bodyFastSize(g *protogen.GeneratedFile, setter, number string
 		f.Element.bodyFastSize(g, setter+"[numIdxOrVal]", "numTagOrKey")
 		g.P(`return n`)
 		g.P(`})`)
+		return
 	}
 	g.P(fmt.Sprintf("for i := range %s {", setter))
 	f.Element.bodyFastSize(g, setter+"[i]", number)
