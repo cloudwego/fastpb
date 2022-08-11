@@ -440,7 +440,7 @@ func (b impl) ReadList(buf []byte, _type int8, single Unmarshal) (n int, err err
 			return 0, errDecode
 		}
 		for len(framed) > 0 {
-			off, err := single(buf, SkipTypeCheck)
+			off, err := single(framed, SkipTypeCheck)
 			if err != nil {
 				return 0, err
 			}
