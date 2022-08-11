@@ -351,10 +351,10 @@ func (f *bodyBase) typeName() string {
 func (f *bodyBase) bodyFastRead(g *protogen.GeneratedFile, setter string, appendSetter bool) {
 	if !appendSetter {
 		if f.IsPointer {
-			g.P(fmt.Sprintf("tmp, offset, err := fastpb.Read%s(buf[offset:], _type)", f.APIType))
+			g.P(fmt.Sprintf("tmp, offset, err := fastpb.Read%s(buf, _type)", f.APIType))
 			g.P(fmt.Sprintf("%s = &tmp", setter))
 		} else {
-			g.P(fmt.Sprintf("%s, offset, err = fastpb.Read%s(buf[offset:], _type)", setter, f.APIType))
+			g.P(fmt.Sprintf("%s, offset, err = fastpb.Read%s(buf, _type)", setter, f.APIType))
 		}
 		g.P(`return offset, err`)
 		return
@@ -362,10 +362,10 @@ func (f *bodyBase) bodyFastRead(g *protogen.GeneratedFile, setter string, append
 	// appendSetter
 	g.P(fmt.Sprintf("var v %s", f.TypeName))
 	if f.IsPointer {
-		g.P(fmt.Sprintf("tmp, offset, err := fastpb.Read%s(buf[offset:], _type)", f.APIType))
+		g.P(fmt.Sprintf("tmp, offset, err := fastpb.Read%s(buf, _type)", f.APIType))
 		g.P(fmt.Sprintf("%s = &tmp", setter))
 	} else {
-		g.P(fmt.Sprintf("v, offset, err = fastpb.Read%s(buf[offset:], _type)", f.APIType))
+		g.P(fmt.Sprintf("v, offset, err = fastpb.Read%s(buf, _type)", f.APIType))
 	}
 	g.P(`if err != nil { return offset, err }`)
 	g.P(fmt.Sprintf("%s = append(%s, v)", setter, setter))
@@ -399,7 +399,7 @@ func (f *bodyEnum) typeName() string {
 
 func (f *bodyEnum) bodyFastRead(g *protogen.GeneratedFile, setter string, appendSetter bool) {
 	g.P("var v int32")
-	g.P("v, offset, err = fastpb.ReadInt32(buf[offset:], _type)")
+	g.P("v, offset, err = fastpb.ReadInt32(buf, _type)")
 	g.P(`if err != nil { return offset, err }`)
 	if appendSetter {
 		g.P(fmt.Sprintf("%s = append(%s, %s(v))", setter, setter, f.TypeName))
@@ -428,7 +428,7 @@ func (f *bodyMessage) typeName() string {
 
 func (f *bodyMessage) bodyFastRead(g *protogen.GeneratedFile, setter string, appendSetter bool) {
 	g.P("var v ", f.TypeName[1:]) // type name is *struct, trim * here
-	g.P("offset, err = fastpb.ReadMessage(buf[offset:], _type, &v)")
+	g.P("offset, err = fastpb.ReadMessage(buf, _type, &v)")
 	g.P(`if err != nil { return offset, err }`)
 	if appendSetter {
 		g.P(fmt.Sprintf("%s = append(%s, &v)", setter, setter))
@@ -460,7 +460,7 @@ func (f *bodyList) typeName() string {
 func (f *bodyList) bodyFastRead(g *protogen.GeneratedFile, setter string, appendSetter bool) {
 	// packed
 	if f.IsPacked {
-		g.P(`offset, err = fastpb.ReadList(buf[offset:], _type,`)
+		g.P(`offset, err = fastpb.ReadList(buf, _type,`)
 		g.P(`func(buf []byte, _type int8) (n int, err error) {`)
 		f.Element.bodyFastRead(g, setter, appendSetter)
 		g.P(`})`)
@@ -517,7 +517,7 @@ func (f *bodyMap) bodyFastRead(g *protogen.GeneratedFile, setter string, appendS
 	g.P(fmt.Sprintf("var key %s", f.Key.typeName()))
 	g.P(fmt.Sprintf("var value %s", f.Value.typeName()))
 	// unmarshal
-	g.P("offset, err = fastpb.ReadMapEntry(buf[offset:], _type,")
+	g.P("offset, err = fastpb.ReadMapEntry(buf, _type,")
 	g.P(`func(buf []byte, _type int8) (offset int, err error) {`)
 
 	f.Key.bodyFastRead(g, "key", false)
