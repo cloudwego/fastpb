@@ -13,9 +13,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: typos-action
-        uses: crate-ci/typos@master
-
   staticcheck:
     runs-on: self-hosted
     steps:

@@ -10,5 +10,7 @@ header:
   paths-ignore:
     - wire.go
     - examples/fastpb_gen/**
+    - benchmark/fastpb_gen/**
+    - benchmark/gogo_gen/**
 
   comment: on-failure
