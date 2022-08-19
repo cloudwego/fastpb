@@ -1,4 +1,4 @@
-# FastPB
+# Fastpb
 
 A faster Protobuf serializer & deserializer.
 
