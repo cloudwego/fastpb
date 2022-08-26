@@ -24,7 +24,7 @@ import (
 	go_gen "github.com/cloudwego/fastpb/benchmark/fastpb_gen"
 )
 
-func Benchmark_marshal_number_go(b *testing.B) {
+func Benchmark_marshal_number_golang(b *testing.B) {
 	encode := goNumber()
 
 	b.ReportAllocs()
@@ -34,7 +34,7 @@ func Benchmark_marshal_number_go(b *testing.B) {
 	}
 }
 
-func Benchmark_unmarshal_number_go(b *testing.B) {
+func Benchmark_unmarshal_number_golang(b *testing.B) {
 	buf := bytesNumber()
 
 	b.ReportAllocs()
@@ -45,7 +45,7 @@ func Benchmark_unmarshal_number_go(b *testing.B) {
 	}
 }
 
-func Benchmark_marshal_string_go(b *testing.B) {
+func Benchmark_marshal_string_golang(b *testing.B) {
 	encode := goString()
 
 	b.ReportAllocs()
@@ -55,7 +55,7 @@ func Benchmark_marshal_string_go(b *testing.B) {
 	}
 }
 
-func Benchmark_unmarshal_string_go(b *testing.B) {
+func Benchmark_unmarshal_string_golang(b *testing.B) {
 	buf := bytesString()
 
 	b.ReportAllocs()
@@ -66,7 +66,7 @@ func Benchmark_unmarshal_string_go(b *testing.B) {
 	}
 }
 
-func Benchmark_marshal_list_go(b *testing.B) {
+func Benchmark_marshal_list_golang(b *testing.B) {
 	encode := goList()
 
 	b.ReportAllocs()
@@ -76,7 +76,7 @@ func Benchmark_marshal_list_go(b *testing.B) {
 	}
 }
 
-func Benchmark_unmarshal_list_go(b *testing.B) {
+func Benchmark_unmarshal_list_golang(b *testing.B) {
 	buf := bytesList()
 
 	b.ReportAllocs()
@@ -87,7 +87,7 @@ func Benchmark_unmarshal_list_go(b *testing.B) {
 	}
 }
 
-func Benchmark_marshal_map_go(b *testing.B) {
+func Benchmark_marshal_map_golang(b *testing.B) {
 	encode := goMap()
 
 	b.ReportAllocs()
@@ -97,7 +97,7 @@ func Benchmark_marshal_map_go(b *testing.B) {
 	}
 }
 
-func Benchmark_unmarshal_map_go(b *testing.B) {
+func Benchmark_unmarshal_map_golang(b *testing.B) {
 	buf := bytesMap()
 
 	b.ReportAllocs()

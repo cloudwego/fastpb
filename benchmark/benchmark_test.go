@@ -50,43 +50,43 @@ func BenchmarkMain(b *testing.B) {
 	Init()
 
 	// marshal ----------------------------------------------------------------------
-	b.Run("Benchmark_marshal_number_go", Benchmark_marshal_number_go)
+	b.Run("Benchmark_marshal_number_golang", Benchmark_marshal_number_golang)
 	b.Run("Benchmark_marshal_number_fastpb", Benchmark_marshal_number_fastpb)
 	b.Run("Benchmark_marshal_number_gogo", Benchmark_marshal_number_gogo)
 	println()
 
-	b.Run("Benchmark_marshal_string_go", Benchmark_marshal_string_go)
+	b.Run("Benchmark_marshal_string_golang", Benchmark_marshal_string_golang)
 	b.Run("Benchmark_marshal_string_fastpb", Benchmark_marshal_string_fastpb)
 	b.Run("Benchmark_marshal_string_gogo", Benchmark_marshal_string_gogo)
 	println()
 
-	b.Run("Benchmark_marshal_list_go", Benchmark_marshal_list_go)
+	b.Run("Benchmark_marshal_list_golang", Benchmark_marshal_list_golang)
 	b.Run("Benchmark_marshal_list_fastpb", Benchmark_marshal_list_fastpb)
 	b.Run("Benchmark_marshal_list_gogo", Benchmark_marshal_list_gogo)
 	println()
 
-	b.Run("Benchmark_marshal_map_go", Benchmark_marshal_map_go)
+	b.Run("Benchmark_marshal_map_golang", Benchmark_marshal_map_golang)
 	b.Run("Benchmark_marshal_map_fastpb", Benchmark_marshal_map_fastpb)
 	b.Run("Benchmark_marshal_map_gogo", Benchmark_marshal_map_gogo)
 	println()
 
 	// unmarshal ----------------------------------------------------------------------
-	b.Run("Benchmark_unmarshal_number_go", Benchmark_unmarshal_number_go)
+	b.Run("Benchmark_unmarshal_number_golang", Benchmark_unmarshal_number_golang)
 	b.Run("Benchmark_unmarshal_number_fastpb", Benchmark_unmarshal_number_fastpb)
 	b.Run("Benchmark_unmarshal_number_gogo", Benchmark_unmarshal_number_gogo)
 	println()
 
-	b.Run("Benchmark_unmarshal_string_go", Benchmark_unmarshal_string_go)
+	b.Run("Benchmark_unmarshal_string_golang", Benchmark_unmarshal_string_golang)
 	b.Run("Benchmark_unmarshal_string_fastpb", Benchmark_unmarshal_string_fastpb)
 	b.Run("Benchmark_unmarshal_string_gogo", Benchmark_unmarshal_string_gogo)
 	println()
 
-	b.Run("Benchmark_unmarshal_list_go", Benchmark_unmarshal_list_go)
+	b.Run("Benchmark_unmarshal_list_golang", Benchmark_unmarshal_list_golang)
 	b.Run("Benchmark_unmarshal_list_fastpb", Benchmark_unmarshal_list_fastpb)
 	b.Run("Benchmark_unmarshal_list_gogo", Benchmark_unmarshal_list_gogo)
 	println()
 
-	b.Run("Benchmark_unmarshal_map_go", Benchmark_unmarshal_map_go)
+	b.Run("Benchmark_unmarshal_map_golang", Benchmark_unmarshal_map_golang)
 	b.Run("Benchmark_unmarshal_map_fastpb", Benchmark_unmarshal_map_fastpb)
 	b.Run("Benchmark_unmarshal_map_gogo", Benchmark_unmarshal_map_gogo)
 	println()
