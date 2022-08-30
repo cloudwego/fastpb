@@ -23,6 +23,7 @@ import (
 
 	gengo "google.golang.org/protobuf/cmd/protoc-gen-go/internal_gengo"
 	"google.golang.org/protobuf/compiler/protogen"
+	"google.golang.org/protobuf/reflect/protoreflect"
 
 	"github.com/cloudwego/fastpb"
 	genfastpb "github.com/cloudwego/fastpb/protoc-gen-fastpb/generator"
@@ -39,6 +40,13 @@ func main() {
 	}
 
 	protogen.Options{}.Run(func(gen *protogen.Plugin) error {
+		// check: only support proto3 now
+		for _, f := range gen.Files {
+			if f.Desc.Syntax() != protoreflect.Proto3 {
+				return nil
+			}
+		}
+		// gen code here
 		for _, f := range gen.Files {
 			if f.Generate {
 				genfastpb.GenerateFile(gen, f)
