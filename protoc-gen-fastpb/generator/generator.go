@@ -198,8 +198,10 @@ func (f *fgMessage) GenFastRead(g *protogen.GeneratedFile) {
 	g.P(`return offset, nil`)
 	g.P(`SkipFieldError:`)
 	g.P(`return offset, fmt.Errorf("%T cannot parse invalid wire-format data, error: %s", x, err)`)
-	g.P(`ReadFieldError:`)
-	g.P(`return offset, fmt.Errorf("%T read field %d '%s' error: %s", x, number, fieldIDToName_` + f.name() + `[number], err)`)
+	if len(f.m.Fields) > 0 {
+		g.P(`ReadFieldError:`)
+		g.P(`return offset, fmt.Errorf("%T read field %d '%s' error: %s", x, number, fieldIDToName_` + f.name() + `[number], err)`)
+	}
 	g.P(`}`)
 	g.P()
 }
