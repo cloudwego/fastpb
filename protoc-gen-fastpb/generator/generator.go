@@ -39,6 +39,11 @@ func GenerateFile(gen *protogen.Plugin, file *protogen.File) *protogen.Generated
 	// imports
 	g.QualifiedGoIdent(protogen.GoIdent{GoImportPath: "fmt"})
 	g.QualifiedGoIdent(protogen.GoIdent{GoImportPath: "github.com/cloudwego/fastpb"})
+	// import guard
+	g.P("var (")
+	g.P("_ = fmt.Errorf")
+	g.P("_ = fastpb.Skip")
+	g.P(")")
 	var invalidVars []string
 	for i, imps := 0, file.Desc.Imports(); i < imps.Len(); i++ {
 		imp := imps.Get(i)
