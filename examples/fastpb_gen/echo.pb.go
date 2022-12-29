@@ -158,6 +158,7 @@ type Message struct {
 	Field37 []MsgEnum                `protobuf:"varint,37,rep,packed,name=field37,proto3,enum=echo.MsgEnum" json:"field37,omitempty"`                                                                                          // []list = bytes; []list
 	Field38 map[int32]MsgEnum        `protobuf:"bytes,38,rep,name=field38,proto3" json:"field38,omitempty" protobuf_key:"varint,1,opt,name=key,proto3" protobuf_val:"varint,2,opt,name=value,proto3,enum=echo.MsgEnum"`        // map[] = bytes; map[]
 	// Types that are assignable to Field40:
+	//
 	//	*Message_Field41
 	//	*Message_Field42
 	//	*Message_Field43
@@ -380,7 +381,7 @@ func (x *Message) GetField30() nested.MsgEnum {
 	if x != nil {
 		return x.Field30
 	}
-	return nested.MsgEnum(0)
+	return nested.MsgEnum_ENUM0
 }
 
 func (x *Message) GetField31() []nested.MsgEnum {
@@ -717,6 +718,7 @@ type Message_Condition struct {
 	unknownFields protoimpl.UnknownFields
 
 	// Types that are assignable to Field1:
+	//
 	//	*Message_Condition_Field2
 	//	*Message_Condition_Field3
 	Field1 isMessage_Condition_Field1 `protobuf_oneof:"field1"`
