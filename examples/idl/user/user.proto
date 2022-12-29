@@ -1,0 +1,13 @@
+syntax = "proto3";
+package user;
+option go_package = "github.com/cloudwego/fastpb/examples/fastpb_gen/user";
+
+message User {
+  int32 id = 1;
+  string name = 2;
+}
+
+enum Group {
+  GROUP_A = 0;
+  GROUP_B = 1;
+}

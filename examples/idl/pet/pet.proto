@@ -1,0 +1,11 @@
+syntax = "proto3";
+package pet;
+option go_package = "github.com/cloudwego/fastpb/examples/fastpb_gen/pet";
+
+import "user/user.proto";
+message Pet {
+  string name = 1;
+  int32 age = 2;
+  string owner = 3;
+  user.Group group = 4;
+}
