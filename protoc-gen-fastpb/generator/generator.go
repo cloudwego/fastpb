@@ -167,6 +167,7 @@ func (fg *fastgen) newFieldBody(f *protogen.Field, desc protoreflect.FieldDescri
 		// Enum
 		b := &bodyEnum{}
 		b.TypeName = parseTypeName(desc.Enum(), fg.f.Proto)
+		b.IsOptional = isPointer
 		return b
 	default:
 		b := &bodyBase{}
@@ -289,6 +290,7 @@ func (f *fgField) GenFastWrite(g *protogen.GeneratedFile) {
 	g.P(fmt.Sprintf("func (x *%s) fastWriteField%s(buf []byte) (offset int) {", f.parentName(), f.number))
 
 	setter := fmt.Sprintf("x.%s", f.name())
+	getSetter := fmt.Sprintf("x.Get%s()", f.name())
 	// oneof need replace setter
 	if f.oneofType != "" {
 		setter = fmt.Sprintf("x.Get%s()", f.name())
@@ -305,7 +307,7 @@ func (f *fgField) GenFastWrite(g *protogen.GeneratedFile) {
 	default:
 		g.P(fmt.Sprintf("if %s == 0 { return offset }", setter))
 	}
-	f.body.bodyFastWrite(g, setter, f.number)
+	f.body.bodyFastWrite(g, getSetter, f.number)
 	g.P("return offset")
 	g.P("}")
 	g.P()
@@ -315,6 +317,7 @@ func (f *fgField) GenFastSize(g *protogen.GeneratedFile) {
 	g.P(fmt.Sprintf("func (x *%s) sizeField%s() (n int) {", f.parentName(), f.number))
 
 	setter := fmt.Sprintf("x.%s", f.name())
+	getSetter := fmt.Sprintf("x.Get%s()", f.name())
 	// oneof need replace setter
 	if f.oneofType != "" {
 		setter = fmt.Sprintf("x.Get%s()", f.name())
@@ -331,7 +334,7 @@ func (f *fgField) GenFastSize(g *protogen.GeneratedFile) {
 	default:
 		g.P(fmt.Sprintf("if %s == 0 { return n }", setter))
 	}
-	f.body.bodyFastSize(g, setter, f.number)
+	f.body.bodyFastSize(g, getSetter, f.number)
 	g.P("return n")
 	g.P("}")
 	g.P()
@@ -359,7 +362,7 @@ func (f *bodyBase) typeName() string {
 
 func (f *bodyBase) bodyFastRead(g *protogen.GeneratedFile, setter string, appendSetter bool) {
 	if !appendSetter {
-		if f.IsPointer {
+		if f.IsPointer && f.APIType != "Bytes" {
 			g.P(fmt.Sprintf("tmp, offset, err := fastpb.Read%s(buf, _type)", f.APIType))
 			g.P(fmt.Sprintf("%s = &tmp", setter))
 		} else {
@@ -382,24 +385,17 @@ func (f *bodyBase) bodyFastRead(g *protogen.GeneratedFile, setter string, append
 }
 
 func (f *bodyBase) bodyFastWrite(g *protogen.GeneratedFile, setter, number string) {
-	mayPointer := ""
-	if f.IsPointer {
-		mayPointer = "*"
-	}
-	g.P(fmt.Sprintf("offset += fastpb.Write%s(buf[offset:], %s, %s%s)", f.APIType, number, mayPointer, setter))
+	g.P(fmt.Sprintf("offset += fastpb.Write%s(buf[offset:], %s, %s)", f.APIType, number, setter))
 }
 
 func (f *bodyBase) bodyFastSize(g *protogen.GeneratedFile, setter, number string) {
-	mayPointer := ""
-	if f.IsPointer {
-		mayPointer = "*"
-	}
-	g.P(fmt.Sprintf("n += fastpb.Size%s(%s, %s%s)", f.APIType, number, mayPointer, setter))
+	g.P(fmt.Sprintf("n += fastpb.Size%s(%s, %s)", f.APIType, number, setter))
 }
 
 // enum
 type bodyEnum struct {
-	TypeName string
+	TypeName   string
+	IsOptional bool
 }
 
 func (f *bodyEnum) typeName() string {
@@ -410,10 +406,14 @@ func (f *bodyEnum) bodyFastRead(g *protogen.GeneratedFile, setter string, append
 	g.P("var v int32")
 	g.P("v, offset, err = fastpb.ReadInt32(buf, _type)")
 	g.P(`if err != nil { return offset, err }`)
+	suffix := ""
+	if f.IsOptional {
+		suffix = ".Enum()"
+	}
 	if appendSetter {
-		g.P(fmt.Sprintf("%s = append(%s, %s(v))", setter, setter, f.TypeName))
+		g.P(fmt.Sprintf("%s = append(%s, %s(v)%s)", setter, setter, f.TypeName, suffix))
 	} else {
-		g.P(fmt.Sprintf("%s = %s(v)", setter, f.TypeName))
+		g.P(fmt.Sprintf("%s = %s(v)%s", setter, f.TypeName, suffix))
 	}
 	g.P("return offset, nil")
 }
