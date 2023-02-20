@@ -161,12 +161,24 @@ func (fg *fastgen) newFieldBody(f *protogen.Field, desc protoreflect.FieldDescri
 		// *struct
 		b := &bodyMessage{}
 		// FIXME: Any is unsupported.
-		b.TypeName = "*" + parseTypeName(desc.Message(), fg.f.Proto)
+		typeName := parseTypeName(desc.Message(), fg.f.Proto)
+		names := strings.Split(typeName, ";")
+		if len(names) > 1 {
+			b.TypeName = "*" + names[0] + filepath.Ext(names[1])
+		} else {
+			b.TypeName = "*" + typeName
+		}
 		return b
 	case protoreflect.EnumKind:
 		// Enum
 		b := &bodyEnum{}
-		b.TypeName = parseTypeName(desc.Enum(), fg.f.Proto)
+		typeName := parseTypeName(desc.Enum(), fg.f.Proto)
+		names := strings.Split(typeName, ";")
+		if len(names) > 1 {
+			b.TypeName = names[0] + filepath.Ext(names[1])
+		} else {
+			b.TypeName = typeName
+		}
 		b.IsOptional = isPointer
 		return b
 	default:
