@@ -20,6 +20,8 @@ import (
 	"math"
 	"unicode/utf8"
 
+	"github.com/bytedance/gopkg/lang/span"
+
 	"google.golang.org/protobuf/encoding/protowire"
 )
 
@@ -31,7 +33,10 @@ var Impl impl
 // to make room).
 const speculativeLength = 1
 
-var _ Protocol = impl{}
+var (
+	_         Protocol = impl{}
+	spanCache          = span.NewSpanCache(1024 * 1024) // 1MB
+)
 
 type impl struct{}
 
@@ -412,7 +417,8 @@ func (b impl) ReadString(buf []byte, _type int8) (value string, n int, err error
 	if EnforceUTF8() && !utf8.Valid(v) {
 		return value, 0, errInvalidUTF8
 	}
-	return string(v), n, nil
+	value = SliceByteToString(spanCache.Copy(v))
+	return value, n, nil
 }
 
 // ReadBytes .
@@ -425,8 +431,7 @@ func (b impl) ReadBytes(buf []byte, _type int8) (value []byte, n int, err error)
 	if n < 0 {
 		return value, 0, errDecode
 	}
-	value = make([]byte, len(v))
-	copy(value, v)
+	value = spanCache.Copy(v)
 	return value, n, nil
 }
 
