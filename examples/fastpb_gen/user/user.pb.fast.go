@@ -60,7 +60,7 @@ func (x *User) fastWriteField1(buf []byte) (offset int) {
 	if x.Id == 0 {
 		return offset
 	}
-	offset += fastpb.WriteInt32(buf[offset:], 1, x.Id)
+	offset += fastpb.WriteInt32(buf[offset:], 1, x.GetId())
 	return offset
 }
 
@@ -68,7 +68,7 @@ func (x *User) fastWriteField2(buf []byte) (offset int) {
 	if x.Name == "" {
 		return offset
 	}
-	offset += fastpb.WriteString(buf[offset:], 2, x.Name)
+	offset += fastpb.WriteString(buf[offset:], 2, x.GetName())
 	return offset
 }
 
@@ -85,7 +85,7 @@ func (x *User) sizeField1() (n int) {
 	if x.Id == 0 {
 		return n
 	}
-	n += fastpb.SizeInt32(1, x.Id)
+	n += fastpb.SizeInt32(1, x.GetId())
 	return n
 }
 
@@ -93,7 +93,7 @@ func (x *User) sizeField2() (n int) {
 	if x.Name == "" {
 		return n
 	}
-	n += fastpb.SizeString(2, x.Name)
+	n += fastpb.SizeString(2, x.GetName())
 	return n
 }
 
