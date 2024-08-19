@@ -18,6 +18,6 @@ package fastpb
 
 const (
 	Name    = "Fastpb"
-	Version = "v0.0.2"
+	Version = "v0.0.5"
 	Home    = "https://github.com/cloudwego/fastpb"
 )

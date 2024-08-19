@@ -40,19 +40,19 @@ func main() {
 	}
 
 	protogen.Options{}.Run(func(gen *protogen.Plugin) error {
-		// check: only support proto3 now
 		for _, f := range gen.Files {
+			// check: only support proto3 now
 			if f.Desc.Syntax() != protoreflect.Proto3 {
-				return nil
+				continue
 			}
-		}
-		// gen code here
-		for _, f := range gen.Files {
+			// gen code here
 			if f.Generate {
 				genfastpb.GenerateFile(gen, f)
 			}
 		}
 		gen.SupportedFeatures = gengo.SupportedFeatures
+		gen.SupportedEditionsMinimum = gengo.SupportedEditionsMinimum
+		gen.SupportedEditionsMaximum = gengo.SupportedEditionsMaximum
 		return nil
 	})
 }
