@@ -34,9 +34,15 @@ var Impl impl
 const speculativeLength = 1
 
 var (
-	_         Protocol = impl{}
-	spanCache          = span.NewSpanCache(1024 * 1024) // 1MB
+	_               Protocol = impl{}
+	spanCache                = span.NewSpanCache(1024 * 1024) // 1MB
+	spanCacheEnable bool     = false
 )
+
+// SetSpanCache enable/disable binary protocol bytes/string allocator
+func SetSpanCache(enable bool) {
+	spanCacheEnable = enable
+}
 
 type impl struct{}
 
@@ -417,7 +423,11 @@ func (b impl) ReadString(buf []byte, _type int8) (value string, n int, err error
 	if EnforceUTF8() && !utf8.Valid(v) {
 		return value, 0, errInvalidUTF8
 	}
-	value = SliceByteToString(spanCache.Copy(v))
+	if spanCacheEnable {
+		value = SliceByteToString(spanCache.Copy(v))
+	} else {
+		value = string(v)
+	}
 	return value, n, nil
 }
 
@@ -431,7 +441,12 @@ func (b impl) ReadBytes(buf []byte, _type int8) (value []byte, n int, err error)
 	if n < 0 {
 		return value, 0, errDecode
 	}
-	value = spanCache.Copy(v)
+	if spanCacheEnable {
+		value = spanCache.Copy(v)
+	} else {
+		value = make([]byte, len(v))
+		copy(value, v)
+	}
 	return value, n, nil
 }
 
