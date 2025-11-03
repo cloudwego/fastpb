@@ -26,7 +26,7 @@ import (
 )
 
 // Impl implements Protocol.
-var Impl impl
+var Impl Protocol = impl{}
 
 // When encoding length-prefixed fields, we speculatively set aside some number of bytes
 // for the length, encode the data, and then encode the length (shifting the data if necessary
@@ -42,6 +42,11 @@ var (
 // SetSpanCache enable/disable binary protocol bytes/string allocator
 func SetSpanCache(enable bool) {
 	spanCacheEnable = enable
+}
+
+// SetImpl replaces the specific codec implementation to support function hijacking etc...
+func SetImpl(impl Protocol) {
+	Impl = impl
 }
 
 type impl struct{}
