@@ -228,7 +228,11 @@ func (f *fgMessage) GenFastWrite(g *protogen.GeneratedFile) {
 }
 
 func (f *fgMessage) GenFastSize(g *protogen.GeneratedFile) {
-	g.P(fmt.Sprintf("func (x *%s) Size() (n int) {", f.name()))
+	if f.containSizeField() {
+		g.P(fmt.Sprintf("func (x *%s) Size_() (n int) {", f.name()))
+	} else {
+		g.P(fmt.Sprintf("func (x *%s) Size() (n int) {", f.name()))
+	}
 	// switch case
 	g.P("if x == nil { return n }")
 	for i := range f.m.Fields {
@@ -238,6 +242,15 @@ func (f *fgMessage) GenFastSize(g *protogen.GeneratedFile) {
 	g.P(`return n`)
 	g.P(`}`)
 	g.P()
+}
+
+func (f *fgMessage) containSizeField() bool {
+	for _, field := range f.m.Fields {
+		if field.GoName == "Size" {
+			return true
+		}
+	}
+	return false
 }
 
 func (f *fgMessage) GenFastConst(g *protogen.GeneratedFile) {
@@ -629,6 +642,8 @@ func parseTypeName(desc protoreflect.Descriptor, fdesc *descriptorpb.FileDescrip
 		pfo := desc.ParentFile().Options().(*descriptorpb.FileOptions)
 		parentGoPkg := *pfo.GoPackage
 		goPkg := string(*fdesc.Options.GoPackage)
+		parentGoPkg = removeAlias(parentGoPkg)
+		goPkg = removeAlias(goPkg)
 		if parentGoPkg != goPkg {
 			name = filepath.Base(parentGoPkg) + "." + name
 		}
@@ -638,4 +653,11 @@ func parseTypeName(desc protoreflect.Descriptor, fdesc *descriptorpb.FileDescrip
 
 func isPointer(field *protogen.Field) (isPointer bool) {
 	return field.Oneof != nil && field.Oneof.Desc.IsSynthetic()
+}
+
+func removeAlias(pkg string) string {
+	if idx := strings.LastIndex(pkg, ";"); idx >= 0 {
+		return pkg[:idx]
+	}
+	return pkg
 }
