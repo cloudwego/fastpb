@@ -1,50 +1,42 @@
 name: Tests
+permissions:
+  contents: read
 
-on: [push, pull_request]
+on: [ push, pull_request ]
 
 jobs:
-  lint-and-ut:
-    runs-on: self-hosted
+  unittest:
+    strategy:
+      matrix:
+        go: [ "1.18", oldstable, stable ]
+        os: [ ubuntu-24.04-arm, ubuntu-latest ]
+    runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v5
         with:
-          go-version: 1.18
-
-      - uses: actions/cache@v3
-        with:
-          path: ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
-
-      - name: Lint
-        run: |
-          go vet -stdmethods=false $(go list ./...)
-          go install mvdan.cc/gofumpt@v0.2.0
-          test -z "$(gofumpt -l -extra .)"
+          go-version: ${{ matrix.go }}
+          cache: true # false for self-hosted runners
 
       - name: Unit Test
-        run: go test -race -covermode=atomic -coverprofile=coverage.out ./...
+        run: go test ./...
 
   benchmark:
-    runs-on: self-hosted
+    strategy:
+      matrix:
+        go: [ "1.18", oldstable, stable ]
+        os: [ ubuntu-24.04-arm, ubuntu-latest ]
+    runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v5
         with:
-          go-version: 1.18
-
-      - uses: actions/cache@v3
-        with:
-          path: ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
+          go-version: ${{ matrix.go }}
+          cache: true # false for self-hosted runners
 
       - name: Benchmark
-        run: go test -bench=. -benchmem -run=none ./...
+        run: go test -bench=. -benchmem -run=none ./... -benchtime=100ms

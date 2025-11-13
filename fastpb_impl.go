@@ -33,15 +33,22 @@ var Impl impl
 // to make room).
 const speculativeLength = 1
 
+type spanCacheImpl interface {
+	Copy(buf []byte) []byte
+}
+
 var (
 	_               Protocol = impl{}
-	spanCache                = span.NewSpanCache(1024 * 1024) // 1MB
-	spanCacheEnable bool     = false
+	spanCache       spanCacheImpl
+	spanCacheEnable = false
 )
 
 // SetSpanCache enable/disable binary protocol bytes/string allocator
 func SetSpanCache(enable bool) {
 	spanCacheEnable = enable
+	if enable && spanCache == nil {
+		spanCache = span.NewSpanCache(1024 * 1024) // 1MB
+	}
 }
 
 type impl struct{}

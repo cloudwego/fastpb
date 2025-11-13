@@ -1,0 +1,4 @@
+[files]
+extend-exclude = [
+    "benchmark/gogo_gen/",
+]
