@@ -172,7 +172,7 @@ func (x *Base) fastWriteField1(buf []byte) (offset int) {
 	if x.LogID == "" {
 		return offset
 	}
-	offset += fastpb.WriteString(buf[offset:], 1, x.LogID)
+	offset += fastpb.WriteString(buf[offset:], 1, x.GetLogID())
 	return offset
 }
 
@@ -180,7 +180,7 @@ func (x *Base) fastWriteField2(buf []byte) (offset int) {
 	if x.Caller == "" {
 		return offset
 	}
-	offset += fastpb.WriteString(buf[offset:], 2, x.Caller)
+	offset += fastpb.WriteString(buf[offset:], 2, x.GetCaller())
 	return offset
 }
 
@@ -188,7 +188,7 @@ func (x *Base) fastWriteField3(buf []byte) (offset int) {
 	if x.Addr == "" {
 		return offset
 	}
-	offset += fastpb.WriteString(buf[offset:], 3, x.Addr)
+	offset += fastpb.WriteString(buf[offset:], 3, x.GetAddr())
 	return offset
 }
 
@@ -196,7 +196,7 @@ func (x *Base) fastWriteField4(buf []byte) (offset int) {
 	if x.Client == "" {
 		return offset
 	}
-	offset += fastpb.WriteString(buf[offset:], 4, x.Client)
+	offset += fastpb.WriteString(buf[offset:], 4, x.GetClient())
 	return offset
 }
 
@@ -204,7 +204,7 @@ func (x *Base) fastWriteField6(buf []byte) (offset int) {
 	if x.Extra == nil {
 		return offset
 	}
-	for k, v := range x.Extra {
+	for k, v := range x.GetExtra() {
 		offset += fastpb.WriteMapEntry(buf[offset:], 6,
 			func(buf []byte, numTagOrKey, numIdxOrVal int32) int {
 				offset := 0
@@ -230,7 +230,7 @@ func (x *BaseResp) fastWriteField1(buf []byte) (offset int) {
 	if x.StatusMessage == "" {
 		return offset
 	}
-	offset += fastpb.WriteString(buf[offset:], 1, x.StatusMessage)
+	offset += fastpb.WriteString(buf[offset:], 1, x.GetStatusMessage())
 	return offset
 }
 
@@ -238,7 +238,7 @@ func (x *BaseResp) fastWriteField2(buf []byte) (offset int) {
 	if x.StatusCode == 0 {
 		return offset
 	}
-	offset += fastpb.WriteInt32(buf[offset:], 2, x.StatusCode)
+	offset += fastpb.WriteInt32(buf[offset:], 2, x.GetStatusCode())
 	return offset
 }
 
@@ -246,7 +246,7 @@ func (x *BaseResp) fastWriteField3(buf []byte) (offset int) {
 	if x.Extra == nil {
 		return offset
 	}
-	for k, v := range x.Extra {
+	for k, v := range x.GetExtra() {
 		offset += fastpb.WriteMapEntry(buf[offset:], 3,
 			func(buf []byte, numTagOrKey, numIdxOrVal int32) int {
 				offset := 0
@@ -274,7 +274,7 @@ func (x *Base) sizeField1() (n int) {
 	if x.LogID == "" {
 		return n
 	}
-	n += fastpb.SizeString(1, x.LogID)
+	n += fastpb.SizeString(1, x.GetLogID())
 	return n
 }
 
@@ -282,7 +282,7 @@ func (x *Base) sizeField2() (n int) {
 	if x.Caller == "" {
 		return n
 	}
-	n += fastpb.SizeString(2, x.Caller)
+	n += fastpb.SizeString(2, x.GetCaller())
 	return n
 }
 
@@ -290,7 +290,7 @@ func (x *Base) sizeField3() (n int) {
 	if x.Addr == "" {
 		return n
 	}
-	n += fastpb.SizeString(3, x.Addr)
+	n += fastpb.SizeString(3, x.GetAddr())
 	return n
 }
 
@@ -298,7 +298,7 @@ func (x *Base) sizeField4() (n int) {
 	if x.Client == "" {
 		return n
 	}
-	n += fastpb.SizeString(4, x.Client)
+	n += fastpb.SizeString(4, x.GetClient())
 	return n
 }
 
@@ -306,7 +306,7 @@ func (x *Base) sizeField6() (n int) {
 	if x.Extra == nil {
 		return n
 	}
-	for k, v := range x.Extra {
+	for k, v := range x.GetExtra() {
 		n += fastpb.SizeMapEntry(6,
 			func(numTagOrKey, numIdxOrVal int32) int {
 				n := 0
@@ -332,7 +332,7 @@ func (x *BaseResp) sizeField1() (n int) {
 	if x.StatusMessage == "" {
 		return n
 	}
-	n += fastpb.SizeString(1, x.StatusMessage)
+	n += fastpb.SizeString(1, x.GetStatusMessage())
 	return n
 }
 
@@ -340,7 +340,7 @@ func (x *BaseResp) sizeField2() (n int) {
 	if x.StatusCode == 0 {
 		return n
 	}
-	n += fastpb.SizeInt32(2, x.StatusCode)
+	n += fastpb.SizeInt32(2, x.GetStatusCode())
 	return n
 }
 
@@ -348,7 +348,7 @@ func (x *BaseResp) sizeField3() (n int) {
 	if x.Extra == nil {
 		return n
 	}
-	for k, v := range x.Extra {
+	for k, v := range x.GetExtra() {
 		n += fastpb.SizeMapEntry(3,
 			func(numTagOrKey, numIdxOrVal int32) int {
 				n := 0

@@ -1,0 +1,10 @@
+syntax = "proto3";
+package mount;
+option go_package = "github.com/cloudwego/fastpb/examples/fastpb_gen/mount;mount";
+
+import "user/player/player.proto";
+message Mount {
+	string name = 1;
+	string owner = 3;
+	player.PlayerKind kind = 4;
+}

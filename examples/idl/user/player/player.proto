@@ -1,0 +1,17 @@
+syntax = "proto3";
+package player;
+option go_package = "github.com/cloudwego/fastpb/examples/fastpb_gen/user/player;playercustom";
+
+message Player {
+	int32 id = 1;
+	string name = 2;
+	PlayerKind kind = 3;
+	int32 level = 4;
+	int32 exp = 5;
+}
+
+enum PlayerKind  {
+	STRENGTH = 0;
+	AGILITY = 1;
+	INTELLECTUAL = 2;
+}
