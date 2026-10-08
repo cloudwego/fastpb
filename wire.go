@@ -102,9 +102,17 @@ func AppendFixed64(b []byte, v uint64) int {
 // This returns a negative length upon an error (see ParseError).
 func ConsumeBytes(b []byte) (v []byte, total int) {
 	m, n := ConsumeVarint(b)
+	if n < 0 {
+		return nil, n // forward error code
+	}
 	total = int(m) + n
-	if n < 0 || total > len(b) {
-		return nil, -1 // forward error code
+	// Guard against integer overflow: a declared length near MaxUint64 wraps
+	// int(m) negative, which would make total < n. Without the lower bound the
+	// range check below passes while b[n:total] slices start > end, panicking
+	// with "slice bounds out of range". This mirrors the reference decoder's
+	// `end > len(b) || end < n` check.
+	if total > len(b) || total < n {
+		return nil, -1
 	}
 	return b[n:total], total
 }
