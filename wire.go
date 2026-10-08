@@ -52,13 +52,24 @@ func AppendTag(b []byte, num protowire.Number, typ protowire.Type) int {
 // ConsumeVarint parses b as a varint-encoded uint64, reporting its length.
 // This returns a negative length upon an error (see ParseError).
 func ConsumeVarint(b []byte) (v uint64, n int) {
-	for i := 0; i < len(b); i++ {
+	for i := 0; i < len(b) && i < 9; i++ {
 		v |= uint64(b[i]&0x7F) << (i * 7)
 		if b[i] < 0x80 {
 			return v, i + 1
 		}
 	}
-	return 0, -1
+	// After 9 continuation bytes, the 10th byte can only contribute bit 63
+	// (value 0 or 1); a larger value overflows uint64, and a 10th continuation
+	// byte means the varint is longer than 10 bytes.
+	// The reference protowire decoder returns errCodeOverflow (-3).
+	if len(b) < 10 {
+		return 0, -1
+	}
+	v |= uint64(b[9]&0x7F) << 63
+	if b[9]&0x7F >= 2 || b[9] >= 0x80 {
+		return 0, -3
+	}
+	return v, 10
 }
 
 // AppendVarint appends v to b as a varint-encoded uint64.
